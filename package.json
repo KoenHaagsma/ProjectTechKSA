@@ -6,8 +6,10 @@
     "description": "Matching app",
     "main": "index.js",
     "dependencies": {
+        "concurrently": "^6.2.0",
         "dotenv": "^10.0.0",
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "node-sass": "^6.0.0"
     },
     "devDependencies": {
         "nodemon": "^2.0.7",
