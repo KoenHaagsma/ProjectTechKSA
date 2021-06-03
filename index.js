@@ -11,6 +11,7 @@ connectDBMongoose();
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.locals.basedir = app.get('views');
 
 // Home route
 app.get('/', (req, res) => {
