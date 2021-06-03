@@ -1,0 +1,27 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 2017
+    },
+    "env": {
+        "es6": true
+    },
+    "rules": {
+        "no-empty": 2,
+        "no-unreachable": 2,
+        "array-callback-return": 1,
+        "no-unused-vars": 2,
+        "block-scoped-var": 1,
+        "for-direction": 2,
+        "getter-return": 1,
+        "no-empty-function": 2,
+        "no-extra-semi": 2,
+        "no-extra-parens": 2,
+        "no-dupe-keys": 2,
+        "no-duplicate-case": 2,
+        "no-multi-spaces": 2,
+        "no-self-assign": 2,
+        "no-self-compare": 2,
+        "no-useless-escape": 2,
+        "quotes": ["error", "single"]
+    }
+}

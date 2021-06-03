@@ -1,0 +1,12 @@
+// Screen sizes
+$screen_size_large: 1199px;
+$screen_size_desktop: 991px;
+$screen_size_tablet: 812px;
+$screen_size_phone: 575px;
+
+@import "colours.scss";
+@import "footer.scss";
+@import "header.scss";
+@import "index.scss";
+@import "layout.scss";
+@import "typography.scss";
