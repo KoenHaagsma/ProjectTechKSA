@@ -14,14 +14,14 @@ app.set('view engine', 'pug');
 
 // Home route
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.render('index');
 });
 
 app.get('/ontdekken', (req, res) => {
     res.render('my_matches');
 });
 
-// Need to change to books
+//// Need to change to books
 // app.get('/ontdekken', (req, res) => {
 //     User.find({}, (err, users) => {
 //         if (err) {
@@ -71,6 +71,7 @@ app.get('/mijn-matches', (req, res) => {
     res.render('my_matches');
 });
 
+//// Need to change to my book matches
 // app.get('/mijn-matches', (req, res) => {
 //     let matchedUsers = [];
 //     loggedInUser.matched.forEach((user) => {
