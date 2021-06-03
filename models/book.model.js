@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const boek = new Schema({
+const book = new Schema({
     id: Schema.Types.ObjectId,
     titel: String,
     auteur: String,
@@ -9,4 +9,4 @@ const boek = new Schema({
     entryDate: Date,
 });
 
-module.exports = boek;
+module.exports = book;
