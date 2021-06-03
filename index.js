@@ -1,22 +1,22 @@
-const express = require("express");
-const chalk = require("chalk");
-require("dotenv").config();
+const express = require('express');
+const chalk = require('chalk');
+require('dotenv').config();
 const app = express();
 
 // Connecting mongoose
-const connectDBMongoose = require("./controllers/mongoose");
+const connectDBMongoose = require('./controllers/mongoose');
 connectDBMongoose();
 
 // Home route
-app.get("/", (req, res) => {
-    res.send("Hello World!");
+app.get('/', (req, res) => {
+    res.send('Hello World!');
 });
 
 // Need to change to books
-app.get("/ontdekken", (req, res) => {
+app.get('/ontdekken', (req, res) => {
     User.find({}, (err, users) => {
         if (err) {
-            res.status(404).render("404");
+            res.status(404).render('404');
         } else {
             const filteredUsers = users.filter((user) => {
                 if (
@@ -43,13 +43,13 @@ app.get("/ontdekken", (req, res) => {
             }
 
             if (matchedUsers.length === 0) {
-                res.render("ontdekken_empty", {
-                    title: "Boeken ontdekken",
-                    empty: "Oeps! Het lijkt erop dat je niet gematched bent aan een boek.",
+                res.render('ontdekken_empty', {
+                    title: 'Boeken ontdekken',
+                    empty: 'Oeps! Het lijkt erop dat je niet gematched bent aan een boek.',
                 });
             } else {
-                res.render("ontdekken", {
-                    title: "Boeken ontdekken",
+                res.render('ontdekken', {
+                    title: 'Boeken ontdekken',
                     boeken: matchedBoeken,
                     aantalMatches: matchedUsers.length,
                 });
@@ -58,7 +58,7 @@ app.get("/ontdekken", (req, res) => {
     });
 });
 
-app.get("/mijn-matches", (req, res) => {
+app.get('/mijn-matches', (req, res) => {
     let matchedUsers = [];
     loggedInUser.matched.forEach((user) => {
         matchedUsers.push(user);
@@ -70,16 +70,16 @@ app.get("/mijn-matches", (req, res) => {
         (err, users) => {
             if (err) {
                 console.log(err);
-                res.redirect("/");
+                res.redirect('/');
             } else {
                 if (matchedUsers.length === 0) {
-                    res.render("my_matches_empty", {
-                        title: "Mijn Matches",
-                        empty: "Oeps! Het lijkt erop dat je nog geen matches hebt geaccepteerd.",
+                    res.render('my_matches_empty', {
+                        title: 'Mijn Matches',
+                        empty: 'Oeps! Het lijkt erop dat je nog geen matches hebt geaccepteerd.',
                     });
                 } else {
-                    res.render("my_matches", {
-                        title: "Mijn Matches",
+                    res.render('my_matches', {
+                        title: 'Mijn Matches',
                         boeken: users,
                     });
                 }
