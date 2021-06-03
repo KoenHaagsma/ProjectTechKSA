@@ -4,7 +4,7 @@ const chalk = require("chalk");
 const connectDBMongoose = async () => {
     try {
         await mongoose.connect(
-            `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster.hblwp.mongodb.net/MatchingApp?retryWrites=true&w=majority`,
+            `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.r187e.mongodb.net/Cluster0?retryWrites=true&w=majority`,
             {
                 useNewUrlParser: true,
                 useCreateIndex: true,
