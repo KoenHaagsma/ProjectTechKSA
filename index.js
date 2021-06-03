@@ -7,13 +7,12 @@ const app = express();
 const connectDBMongoose = require("./controllers/mongoose");
 connectDBMongoose();
 
-console.log(process.env.USER);
-console.log(process.env.PASSWORD);
-
+// Home route
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
+// Booting app
 app.listen(process.env.PORT, () => {
     console.log(chalk.blueBright(`Example app listening at http://localhost:${process.env.PORT}`));
 });

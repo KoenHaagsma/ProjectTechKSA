@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const chalk = require("chalk");
+const mongoose = require('mongoose');
+const chalk = require('chalk');
 
 const connectDBMongoose = async () => {
     try {
@@ -12,7 +12,7 @@ const connectDBMongoose = async () => {
                 useUnifiedTopology: true,
             }
         );
-        console.log(chalk.greenBright("Connection with the database established"));
+        console.log(chalk.greenBright('Connection with the database established'));
     } catch (error) {
         console.log(chalk.redBright(`an error occurred: ${error}`));
         throw error;
