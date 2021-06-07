@@ -4,8 +4,11 @@ require('dotenv').config();
 const app = express();
 const path = require('path');
 
+const port = process.env.PORT || 3000;
+
 // Connecting mongoose
-const connectDBMongoose = require('./controllers/mongoose');
+const connectDBMongoose = require('./models/mongoose');
+
 connectDBMongoose();
 
 // Load view engine | Path: Directory name + map name.
@@ -108,9 +111,10 @@ app.get('/mijn-matches', (req, res) => {
 app.use((req, res, next) => {
     res.status(404).render('404');
     next();
+
 });
 
 // Booting app
-app.listen(process.env.PORT, () => {
-    console.log(chalk.blueBright(`Example app listening at http://localhost:${process.env.PORT}`));
+app.listen(port, () => {
+    console.log(chalk.blueBright(`Example app listening at http://localhost:${port}`));
 });
