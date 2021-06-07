@@ -1,0 +1,10 @@
+header
+    nav
+        ul 
+            li: a(href="") Home
+            li: a(href="") Discover
+            li: a(href="") Saved
+            if (user)
+                li: a(href="") Profile
+            else 
+                li: a(href="" class="login") Login
