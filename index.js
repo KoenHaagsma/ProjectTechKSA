@@ -29,6 +29,10 @@ app.get('/addabook', (req, res) => {
     res.render('addBook');
 });
 
+app.get('/profile', (req, res) => {
+    res.render('profile');
+});
+
 // Need to change to books
 app.get('/ontdekken', (req, res) => {
     User.find({}, (err, users) => {
