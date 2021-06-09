@@ -25,7 +25,23 @@ app.get('/ontdekken', (req, res) => {
     res.render('my_matches');
 });
 
+
+// ADD A BOOK
+
+const controller = require('./controllers/addBook');
+app.use('/', controller)
+
 app.get('/addabook', (req, res) => {
+    res.render('addBook');
+});
+
+app.post('/addabook', (req, res) => {
+    const data = {
+        titel: req.body.titel, 
+        auteur: req.body.auteur, 
+        genre: req.body.genre
+    };
+    saveData(data);
     res.render('addBook');
 });
 
