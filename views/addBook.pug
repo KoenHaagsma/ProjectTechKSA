@@ -1,19 +1,22 @@
-section 
-    h1 Add a book to my list 
-    form(action="" method="POST")
-        #addBook.input
-            label Title 
-            input(type="text" name="title")
+extends layout
 
-        #addBook.input
-            label Author 
-            input(type="text" name="author")
+block content
+    section 
+        h1 Add a book to my list 
+        form(action="" method="POST")
+            .addBook.input
+                label Title 
+                input(type="text" name="title")
 
-        #addBook.input
-            label Genre 
-            input(type="text" name="genre")
+            .addBook.input
+                label Author 
+                input(type="text" name="author")
 
-        #addBook.input
-            label Image 
-            input(type="file" name="image")
-        button (type='submit')
+            .addBook.input
+                label Genre 
+                input(type="text" name="genre")
+
+            .addBook.input
+                label Image 
+                input(type="file" name="image")
+            button (type='submit')

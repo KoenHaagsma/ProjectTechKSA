@@ -7,9 +7,9 @@ const path = require('path');
 const port = process.env.PORT || 3000;
 
 // Connecting mongoose
-const connectDBMongoose = require('./models/mongoose');
+//const connectDBMongoose = require('./models/mongoose');
 
-connectDBMongoose();
+//connectDBMongoose();
 
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +23,10 @@ app.get('/', (req, res) => {
 
 app.get('/ontdekken', (req, res) => {
     res.render('my_matches');
+});
+
+app.get('/addabook', (req, res) => {
+    res.render('addBook');
 });
 
 // Need to change to books
