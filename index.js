@@ -26,8 +26,9 @@ app.get('/ontdekken', (req, res) => {
 });
 
 
-// ADD A BOOK
-
+/*  
+    ADD A BOOK 
+*/
 const controller = require('./controllers/addBook');
 app.use('/', controller)
 
@@ -45,9 +46,15 @@ app.post('/addabook', (req, res) => {
     res.render('addBook');
 });
 
+/*  
+    PROFILE 
+*/
 app.get('/profile', (req, res) => {
     res.render('profile');
 });
+
+
+
 
 // Need to change to books
 app.get('/ontdekken', (req, res) => {
