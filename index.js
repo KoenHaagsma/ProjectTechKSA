@@ -22,6 +22,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.locals.basedir = app.get('views');
 
+// Bodyparser from Express
 app.use(express.json());
 app.use(
     express.urlencoded({
@@ -32,6 +33,7 @@ app.use(
 // Serving static files (CSS, IMG, JS, etc.)
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 
+// Express session
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
@@ -47,6 +49,7 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+// Route if user is logged in.
 app.get('/home', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
@@ -59,16 +62,17 @@ app.get('/home', (req, res) => {
     }
 });
 
+// Login route
 app.get('/login', (req, res) => {
     res.render('login');
 });
 
+// Register route
 app.get('/register', (req, res) => {
-    res.render('register', {
-        title: 'Register',
-    });
+    res.render('register');
 });
 
+// Discover new books route
 app.get('/ontdekken', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
@@ -81,6 +85,7 @@ app.get('/ontdekken', (req, res) => {
     }
 });
 
+// Watch my books route
 app.get('/mijn-matches', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
@@ -93,11 +98,12 @@ app.get('/mijn-matches', (req, res) => {
     }
 });
 
+// Watch my profile route
 app.get('/profile', (req, res) => {
     res.render('profile');
 });
 
-// Register/login user
+// Registering a user
 app.post('/registerUser', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 14);
@@ -118,6 +124,7 @@ app.post('/registerUser', async (req, res) => {
     }
 });
 
+// Logging in a user
 app.post('/loginUser', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -208,7 +215,7 @@ app.get('/ontdekken', (req, res) => {
     });
 });
 
-// Need to change to my book matches
+// TODO: Need to change to my book matches
 app.get('/mijn-matches', (req, res) => {
     let matchedUsers = [];
     loggedInUser.matched.forEach((user) => {
@@ -239,12 +246,6 @@ app.get('/mijn-matches', (req, res) => {
     );
 });
 
-app.post('/logout', (req, res) => {
-    req.session.destroy((err) => {});
-    console.log('User is logged out');
-    res.redirect('/');
-});
-
 // Update user
 app.post('/updateUser', (req, res) => {
     User.findOneAndUpdate({ email: req.body.email }, { email: req.body.newEmail }, { new: true }, (error, data) => {
@@ -265,6 +266,13 @@ app.post('/deleteUser', async (req, res) => {
             res.redirect('/register');
         }
     });
+});
+
+// Logging out the user
+app.post('/logout', (req, res) => {
+    req.session.destroy((err) => {});
+    console.log('User is logged out');
+    res.redirect('/');
 });
 
 // Handling 404
