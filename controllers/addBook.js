@@ -26,6 +26,7 @@ function saveData(data) {
 async function getBooks() {
     // lean() transforms mongoose object to json object
     const data = await newBook.find().lean();
+    console.log(data)
     return data;
 }
 
@@ -44,7 +45,6 @@ router.get('/profile', async (req, res) => {
     res.render('profile', {
         books: await getBooks()
     });
-    console.log(getBooks())
 });
 
 module.exports = router;

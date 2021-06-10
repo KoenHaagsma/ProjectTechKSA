@@ -13,10 +13,11 @@ block content
         label Interests 
 
         label List of books
-            ul each book in books
-                li Title #{title.year}
-                li Author = author 
-                li Genre = genre
+            ul 
+                each data in books
+                    li= data.title
+                    li= data.author
+                    li= data.genre
              
 
         form(action="updateUser" method="POST")
