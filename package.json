@@ -23,7 +23,8 @@
     "scripts": {
         "linter": "./node_modules/.bin/eslint ./**/*.js --fix",
         "start": "node ./src/index.js",
-        "dev": "concurrently \"nodemon ./index.js\" \"node-sass ./scss/app.scss ./public/css/style.css -w\" \"npm run linter\""
+        "dev": "concurrently \"nodemon ./index.js\" \"node-sass ./scss/app.scss ./public/css/style.css -w\" \"npm run linter\"",
+        "dev1": "nodemon ./index.js"
     },
     "author": "Koen Haagsma",
     "license": "MIT",
