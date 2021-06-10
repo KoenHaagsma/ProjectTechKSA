@@ -2,16 +2,5 @@ extends layout
 
 //- Inlog + registration.
 block content
-    section
-        if messages.error 
-          p #{messages.error}
-        form(action="/loginUser" method="POST")
-            label(for='email') emailadres
-            input#email(type='email' name='email' placeholder='example@email.com' required='')
-
-            label(for='password') Password (Minimum of 8 characters)
-            input#password(type='password' name='password' minlength="8")
-            button(type="submit") Login
-
-            button(type="submit") 
-                a(href="/register") Don't have an account yet? Register!
+    a(href='/login') Inloggen
+    a(href='/register') Registreren

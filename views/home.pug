@@ -1,4 +1,8 @@
-extends layout
+extends layout 
 
 block content
-  p logged in
+    section
+        p #{user.email}
+        form(action="/logout" method="POST")
+            button(type='submit') Uitloggen
+            

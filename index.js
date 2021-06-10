@@ -3,15 +3,7 @@ const chalk = require('chalk');
 require('dotenv').config();
 const path = require('path');
 const bcrypt = require('bcrypt');
-const passport = require('passport');
-const flash = require('express-flash');
 const session = require('express-session');
-
-const initializePassport = require('./models/passport-config');
-initializePassport(
-  passport,
-  email => users.find(user => user.email === email)
-);
 
 // Initializing app
 const app = express();
@@ -40,20 +32,15 @@ app.use(
 // Serving static files (CSS, IMG, JS, etc.)
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 
-app.use(flash());
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  saveUninitialized: false,
-  resave: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.post('/login', passport.authenticate('local', {
-  succesRedirect: '/home',
-  failureRedirect: '/',
-  failureFlash: true
-}));
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        cookie: { maxAge: Date.now() + 300000 },
+        name: 'uniqueSessionID',
+        saveUninitialized: false,
+        resave: false,
+    }),
+);
 
 // Routes
 app.get('/', (req, res) => {
@@ -61,7 +48,19 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    res.render('home');
+    if (req.session.userId) {
+        User.findOne({ _id: req.session.userId }, function (err, user) {
+            res.render('home', {
+                user: user,
+            });
+        });
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.get('/login', (req, res) => {
+    res.render('login');
 });
 
 app.get('/register', (req, res) => {
@@ -71,15 +70,77 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/ontdekken', (req, res) => {
-    res.render('my_matches');
+    if (req.session.userId) {
+        User.findOne({ _id: req.session.userId }, function (err, user) {
+            res.render('ontdekken', {
+                user: user,
+            });
+        });
+    } else {
+        res.redirect('/login');
+    }
 });
 
 app.get('/mijn-matches', (req, res) => {
-    res.render('my_matches');
+    if (req.session.userId) {
+        User.findOne({ _id: req.session.userId }, function (err, user) {
+            res.render('my_matches', {
+                user: user,
+            });
+        });
+    } else {
+        res.redirect('/login');
+    }
 });
 
 app.get('/profile', (req, res) => {
     res.render('profile');
+});
+
+// Register/login user
+app.post('/registerUser', async (req, res) => {
+    try {
+        const hashedPassword = await bcrypt.hash(req.body.password, 14);
+        const userJson = {
+            email: req.body.email,
+            password: hashedPassword,
+        };
+        const newUser = new User(userJson);
+        await newUser.save();
+        res.redirect('/login');
+        return;
+    } catch (error) {
+        console.log(error);
+        res.status(404).render('404', {
+            url: req.url,
+            title: 'Error 404',
+        });
+    }
+});
+
+app.post('/loginUser', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    try {
+        User.findOne({ email: email }, function (err, user) {
+            if (user) {
+                bcrypt
+                    .compare(password, user.password)
+                    .then(() => {
+                        req.session.userId = user._id;
+                        res.redirect('/home');
+                        return;
+                    })
+                    .catch(console.log('Wrong password'));
+            } else {
+                console.log('User not found');
+                res.redirect('/login');
+                return;
+            }
+        });
+    } catch (error) {
+        console.log('Login failed ' + error);
+    }
 });
 
 // Add a book feature
@@ -178,48 +239,10 @@ app.get('/mijn-matches', (req, res) => {
     );
 });
 
-// Register/login user
-app.post('/registerUser', async (req, res) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        const userJson = {
-          email: req.body.email,
-          password: hashedPassword
-        }
-        const newUser = new User(userJson);
-        await newUser.save();
-        res.redirect('/');
-        return;
-    } catch (error) {
-        console.log(error);
-        res.status(404).render('404', {
-            url: req.url,
-            title: 'Error 404',
-        });
-    }
-});
-
-app.post('/loginUser', (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    try {
-        User.findOne({ email: email }, function (err, user) {
-            if (user) {
-                if (user.password === password) {
-                    console.log('Logged in');
-                    res.redirect('/home');
-                    return;
-                } else {
-                    console.log('Wrong password');
-                }
-            }
-            console.log('User not found');
-            res.redirect('/');
-            return;
-        });
-    } catch (error) {
-        console.log('Login failed ' + error);
-    }
+app.post('/logout', (req, res) => {
+    req.session.destroy((err) => {});
+    console.log('User is logged out');
+    res.redirect('/');
 });
 
 // Update user
