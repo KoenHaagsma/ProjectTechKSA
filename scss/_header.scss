@@ -32,7 +32,8 @@ header {
                 font-weight: bold;
                 text-decoration: none;
             }
-            .login {
+            .login,
+            .logout {
                 color: white;
                 background-color: $orange-peel;
                 border: 1px solid $orange-peel;
