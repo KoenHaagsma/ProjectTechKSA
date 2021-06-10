@@ -1,0 +1,30 @@
+extends layout 
+
+
+//- Need to have a delete account button/section
+//- Also need to have a change email option/username/normal name
+
+block content
+    section  
+        h1 My profile 
+        
+        label Name
+        
+        label Interests 
+
+        label List of books
+
+
+
+        h1 Hi
+        form(action="updateUser" method="POST")
+            label Fill in your current email
+            input(name="email")
+            label Fill in your new email
+            input(name="newEmail")
+            button(type="submit") Change email
+  
+            button(type="submit" href="/home") Back
+
+
+

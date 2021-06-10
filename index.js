@@ -1,31 +1,79 @@
 const express = require('express');
 const chalk = require('chalk');
 require('dotenv').config();
-const app = express();
 const path = require('path');
 
+// Initializing app
+const app = express();
 const port = process.env.PORT || 3000;
 
 // Connecting mongoose
-const connectDBMongoose = require('./models/mongoose');
 
+const connectDBMongoose = require('./models/mongoose');
 connectDBMongoose();
+
+// Loading in user models
+const User = require('./controllers/user');
+const Book = require('./controllers/book');
 
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.locals.basedir = app.get('views');
 
-// Home route
+app.use(express.json());
+app.use(
+    express.urlencoded({
+        extended: true,
+    }),
+);
+
+// Serving static files (CSS, IMG, JS, etc.)
+app.use('/assets', express.static(path.join(__dirname, 'public')));
+
+// Routes
 app.get('/', (req, res) => {
     res.render('index');
+});
+
+app.get('/register', (req, res) => {
+    res.render('register', {
+        title: 'Register',
+    });
 });
 
 app.get('/ontdekken', (req, res) => {
     res.render('my_matches');
 });
 
-// Need to change to books
+app.get('/mijn-matches', (req, res) => {
+    res.render('my_matches');
+});
+
+app.get('/profile', (req, res) => {
+    res.render('profile');
+});
+
+// Add a book feature
+const controller = require('./controllers/addBook');
+app.use('/', controller);
+
+app.get('/addabook', (req, res) => {
+    res.render('addBook');
+});
+
+app.post('/addabook', (req, res) => {
+    const data = {
+        titel: req.body.titel,
+        auteur: req.body.auteur,
+        genre: req.body.genre,
+    };
+    saveData(data);
+    res.render('addBook');
+});
+
+// Matching feature
+// TODO: Need to change to books
 app.get('/ontdekken', (req, res) => {
     User.find({}, (err, users) => {
         if (err) {
@@ -71,10 +119,6 @@ app.get('/ontdekken', (req, res) => {
     });
 });
 
-app.get('/mijn-matches', (req, res) => {
-    res.render('my_matches');
-});
-
 // Need to change to my book matches
 app.get('/mijn-matches', (req, res) => {
     let matchedUsers = [];
@@ -106,12 +150,75 @@ app.get('/mijn-matches', (req, res) => {
     );
 });
 
+// Register/login user
+app.post('/registerUser', async (req, res) => {
+    try {
+        const newUser = new User({
+            email: req.body.email,
+            password: req.body.password,
+        });
+        await newUser.save();
+        res.redirect('/home');
+        return;
+    } catch (error) {
+        console.log(error);
+        res.status(404).render('pages/404', {
+            url: req.url,
+            title: 'Error 404',
+        });
+    }
+});
+
+app.post('/loginUser', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    try {
+        User.findOne({ email: email }, function (err, user) {
+            if (user) {
+                if (user.password == password) {
+                    console.log('Logged in');
+                    res.redirect('/home');
+                    return;
+                } else {
+                    console.log('Wrong password');
+                }
+            }
+            console.log('User not found');
+            res.redirect('/login');
+            return;
+        });
+    } catch (error) {
+        console.log('Login failed ' + error);
+    }
+});
+
+// Update user
+app.post('/updateUser', (req, res) => {
+    User.findOneAndUpdate({ email: req.body.email }, { email: req.body.newEmail }, { new: true }, (error, data) => {
+        if (error) {
+            console.log(error);
+        } else {
+            res.redirect('/home');
+        }
+    });
+});
+
+// Delete user
+app.post('/deleteUser', async (req, res) => {
+    User.findOneAndDelete({ email: req.body.email }, (error, data) => {
+        if (error) {
+            console.log(error);
+        } else {
+            res.redirect('/register');
+        }
+    });
+});
+
 // Handling 404
 // TODO: Even kijken of ik use moet gebruiken of iets anders.
 app.use((req, res, next) => {
     res.status(404).render('404');
     next();
-
 });
 
 // Booting app

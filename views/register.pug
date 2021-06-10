@@ -1,0 +1,16 @@
+extends layout 
+
+block content
+    form(action='/registerUser' method='POST')
+      label(for='email') Emailadres
+      input#email(type='email' name='email' placeholder='example@email.com' required='')
+
+      label(for="password") Password (Minimal 8 characters)
+      input#password(type='password' name='password' minlength="8" required='')
+
+      label(for='confirmPassword') Confirm password
+      input#confirmPassword(type='password' name='confirmPassword' minlength='8' required='')
+      button(type="submit") Register
+  
+      button(type="submit")
+        a(href="/login") Already have an account? Login!

@@ -1,10 +1,8 @@
 const express = require('express');
 // middleware voor endpoints. nodig om dit extern
-const router = express.Router();
-
+const addBook = express.Router();
 const mongoose = require('mongoose');
-const boek = require('../schema/boek.schema');
-const gebruiker = require('../schema/gebruiker.schema');
+const book = require('./book');
 
 // collection, schema
 const newBoek = mongoose.model('book', book);
@@ -30,3 +28,5 @@ async function getBooks() {
     const data = await newBoek.find().lean();
     return data;
 }
+
+module.exports = addBook;
