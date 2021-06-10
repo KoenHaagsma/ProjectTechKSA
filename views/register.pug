@@ -1,7 +1,6 @@
 extends layout 
 
 block content
-  h1 Register
     form(action='/registerUser' method='POST')
       label(for='email') Emailadres
       input#email(type='email' name='email' placeholder='example@email.com' required='')

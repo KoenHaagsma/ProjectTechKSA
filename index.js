@@ -36,18 +36,6 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.get('/home', (req, res) => {
-    res.render('home', {
-        title: 'Logged in',
-    });
-});
-
-app.get('/login', (req, res) => {
-    res.render('login', {
-        title: 'Login',
-    });
-});
-
 app.get('/register', (req, res) => {
     res.render('register', {
         title: 'Register',
@@ -64,18 +52,6 @@ app.get('/mijn-matches', (req, res) => {
 
 app.get('/profile', (req, res) => {
     res.render('profile');
-});
-
-app.get('/delete', (req, res) => {
-    res.render('delete', {
-        title: 'Delete account',
-    });
-});
-
-app.get('/update', (req, res) => {
-    res.render('update', {
-        title: 'Update data',
-    });
 });
 
 // Add a book feature
@@ -174,7 +150,7 @@ app.get('/mijn-matches', (req, res) => {
     );
 });
 
-// Functies om de app te gebruiken
+// Register/login user
 app.post('/registerUser', async (req, res) => {
     try {
         const newUser = new User({
@@ -216,6 +192,7 @@ app.post('/loginUser', (req, res) => {
     }
 });
 
+// Update user
 app.post('/updateUser', (req, res) => {
     User.findOneAndUpdate({ email: req.body.email }, { email: req.body.newEmail }, { new: true }, (error, data) => {
         if (error) {
@@ -226,6 +203,7 @@ app.post('/updateUser', (req, res) => {
     });
 });
 
+// Delete user
 app.post('/deleteUser', async (req, res) => {
     User.findOneAndDelete({ email: req.body.email }, (error, data) => {
         if (error) {
