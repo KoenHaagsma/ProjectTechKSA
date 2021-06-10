@@ -8,19 +8,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Connecting mongoose
-<<<<<<< HEAD
 const connectDBMongoose = require('./models/mongoose');
 
 connectDBMongoose();
-=======
-
-const connectDBMongoose = require('./models/mongoose');
-connectDBMongoose();
-
-// Loading in user models
-const User = require('./controllers/user');
-const Book = require('./controllers/book');
->>>>>>> addbook
 
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
@@ -61,17 +51,18 @@ app.get('/profile', (req, res) => {
 });
 
 // Add a book feature
-const controller = require('./controllers/addBook');
-app.use('/', controller);
+const addBook = require('./controllers/addBook');
+app.use('/', addBook);
 
 app.get('/addabook', (req, res) => {
     res.render('addBook');
+    console.log(addBook)
 });
 
 app.post('/addabook', (req, res) => {
     const data = {
-        titel: req.body.titel,
-        auteur: req.body.auteur,
+        title: req.body.title,
+        author: req.body.author,
         genre: req.body.genre,
     };
     saveData(data);
