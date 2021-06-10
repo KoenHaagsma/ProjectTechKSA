@@ -3,9 +3,11 @@ extends layout
 //- Inlog + registration.
 block content
     section
+        if messages.error 
+          p #{messages.error}
         form(action="/loginUser" method="POST")
-            label(for='emailadres') E-mailadres
-            input#e-mail(type='e-mail' name='email' placeholder='example@email.com' required='')
+            label(for='email') emailadres
+            input#email(type='email' name='email' placeholder='example@email.com' required='')
 
             label(for='password') Password (Minimum of 8 characters)
             input#password(type='password' name='password' minlength="8")
@@ -13,12 +15,3 @@ block content
 
             button(type="submit") 
                 a(href="/register") Don't have an account yet? Register!
-
-
-
-
-
-
-
-
-

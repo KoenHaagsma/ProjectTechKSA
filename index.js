@@ -2,19 +2,28 @@ const express = require('express');
 const chalk = require('chalk');
 require('dotenv').config();
 const path = require('path');
+const bcrypt = require('bcrypt');
+const passport = require('passport');
+const flash = require('express-flash');
+const session = require('express-session');
+
+const initializePassport = require('./models/passport-config');
+initializePassport(
+  passport,
+  email => users.find(user => user.email === email)
+);
 
 // Initializing app
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Connecting mongoose
-
 const connectDBMongoose = require('./models/mongoose');
 connectDBMongoose();
 
 // Loading in user models
-const User = require('./controllers/user');
-const Book = require('./controllers/book');
+const User = require('./controllers/User');
+const Book = require('./controllers/Book');
 
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
@@ -31,9 +40,28 @@ app.use(
 // Serving static files (CSS, IMG, JS, etc.)
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 
+app.use(flash());
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  saveUninitialized: false,
+  resave: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.post('/login', passport.authenticate('local', {
+  succesRedirect: '/home',
+  failureRedirect: '/',
+  failureFlash: true
+}));
+
 // Routes
 app.get('/', (req, res) => {
     res.render('index');
+});
+
+app.get('/home', (req, res) => {
+    res.render('home');
 });
 
 app.get('/register', (req, res) => {
@@ -153,16 +181,18 @@ app.get('/mijn-matches', (req, res) => {
 // Register/login user
 app.post('/registerUser', async (req, res) => {
     try {
-        const newUser = new User({
-            email: req.body.email,
-            password: req.body.password,
-        });
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        const userJson = {
+          email: req.body.email,
+          password: hashedPassword
+        }
+        const newUser = new User(userJson);
         await newUser.save();
-        res.redirect('/home');
+        res.redirect('/');
         return;
     } catch (error) {
         console.log(error);
-        res.status(404).render('pages/404', {
+        res.status(404).render('404', {
             url: req.url,
             title: 'Error 404',
         });
@@ -175,7 +205,7 @@ app.post('/loginUser', (req, res) => {
     try {
         User.findOne({ email: email }, function (err, user) {
             if (user) {
-                if (user.password == password) {
+                if (user.password === password) {
                     console.log('Logged in');
                     res.redirect('/home');
                     return;
@@ -184,7 +214,7 @@ app.post('/loginUser', (req, res) => {
                 }
             }
             console.log('User not found');
-            res.redirect('/login');
+            res.redirect('/');
             return;
         });
     } catch (error) {
