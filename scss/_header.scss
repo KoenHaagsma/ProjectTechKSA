@@ -1,0 +1,44 @@
+header {
+    position: fixed;
+    top: 0;
+    width: calc(100% - 1rem);
+    margin: 1rem 2rem;
+    @media (min-width: $screen_size_tablet) {
+        width: calc(100% - 4rem);
+        max-width: $screen_size_large;
+    }
+    @media (max-width: $screen_size_tablet) {
+        margin: 1rem 0rem;
+    }
+    ul {
+        margin: 0;
+        padding: 1rem;
+        display: flex;
+        justify-content: flex-end;
+        @media (min-width: $screen_size_tablet) {
+            flex-wrap: wrap;
+        }
+        @media (max-width: $screen_size_tablet) {
+            justify-content: center;
+        }
+        li {
+            list-style-type: none;
+            padding: 1rem !important;
+            @media (max-width: $screen_size_tablet) {
+                padding: 1rem 0.8rem !important;
+            }
+            a {
+                color: $ming;
+                font-weight: bold;
+                text-decoration: none;
+            }
+            .login {
+                color: white;
+                background-color: $orange-peel;
+                border: 1px solid $orange-peel;
+                border-radius: 16px;
+                padding: 0.5rem 1.5rem;
+            }
+        }
+    }
+}
