@@ -8,8 +8,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Connecting mongoose
+
 const connectDBMongoose = require('./models/mongoose');
 connectDBMongoose();
+
 
 // Loading in user models
 const User = require('./controllers/user');
@@ -38,6 +40,37 @@ app.get('/', (req, res) => {
 app.get('/ontdekken', (req, res) => {
     res.render('my_matches');
 });
+
+
+/*  
+    ADD A BOOK 
+*/
+const controller = require('./controllers/addBook');
+app.use('/', controller)
+
+app.get('/addabook', (req, res) => {
+    res.render('addBook');
+});
+
+app.post('/addabook', (req, res) => {
+    const data = {
+        titel: req.body.titel, 
+        auteur: req.body.auteur, 
+        genre: req.body.genre
+    };
+    saveData(data);
+    res.render('addBook');
+});
+
+/*  
+    PROFILE 
+*/
+app.get('/profile', (req, res) => {
+    res.render('profile');
+});
+
+
+
 
 // Need to change to books
 app.get('/ontdekken', (req, res) => {
