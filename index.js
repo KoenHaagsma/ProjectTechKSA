@@ -36,13 +36,49 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+app.get('/home', (req, res) => {
+    res.render('home', {
+        title: 'Logged in',
+    });
+});
+
+app.get('/login', (req, res) => {
+    res.render('login', {
+        title: 'Login',
+    });
+});
+
+app.get('/register', (req, res) => {
+    res.render('register', {
+        title: 'Register',
+    });
+});
+
 app.get('/ontdekken', (req, res) => {
     res.render('my_matches');
 });
 
-/*  
-    ADD A BOOK 
-*/
+app.get('/mijn-matches', (req, res) => {
+    res.render('my_matches');
+});
+
+app.get('/profile', (req, res) => {
+    res.render('profile');
+});
+
+app.get('/delete', (req, res) => {
+    res.render('delete', {
+        title: 'Delete account',
+    });
+});
+
+app.get('/update', (req, res) => {
+    res.render('update', {
+        title: 'Update data',
+    });
+});
+
+// Add a book feature
 const controller = require('./controllers/addBook');
 app.use('/', controller);
 
@@ -60,14 +96,8 @@ app.post('/addabook', (req, res) => {
     res.render('addBook');
 });
 
-/*  
-    PROFILE 
-*/
-app.get('/profile', (req, res) => {
-    res.render('profile');
-});
-
-// Need to change to books
+// Matching feature
+// TODO: Need to change to books
 app.get('/ontdekken', (req, res) => {
     User.find({}, (err, users) => {
         if (err) {
@@ -113,10 +143,6 @@ app.get('/ontdekken', (req, res) => {
     });
 });
 
-app.get('/mijn-matches', (req, res) => {
-    res.render('my_matches');
-});
-
 // Need to change to my book matches
 app.get('/mijn-matches', (req, res) => {
     let matchedUsers = [];
@@ -146,43 +172,6 @@ app.get('/mijn-matches', (req, res) => {
             }
         },
     );
-});
-
-// Handling 404
-// TODO: Even kijken of ik use moet gebruiken of iets anders.
-app.use((req, res, next) => {
-    res.status(404).render('404');
-    next();
-});
-
-app.get('/register', (req, res) => {
-    res.render('pages/register', {
-        title: 'Register',
-    });
-});
-
-app.get('/login', (req, res) => {
-    res.render('pages/login', {
-        title: 'Login',
-    });
-});
-
-app.get('/delete', (req, res) => {
-    res.render('pages/delete', {
-        title: 'Delete account',
-    });
-});
-
-app.get('/home', (req, res) => {
-    res.render('pages/home', {
-        title: 'Logged in',
-    });
-});
-
-app.get('/update', (req, res) => {
-    res.render('pages/update', {
-        title: 'Update data',
-    });
 });
 
 // Functies om de app te gebruiken
@@ -245,6 +234,13 @@ app.post('/deleteUser', async (req, res) => {
             res.redirect('/register');
         }
     });
+});
+
+// Handling 404
+// TODO: Even kijken of ik use moet gebruiken of iets anders.
+app.use((req, res, next) => {
+    res.status(404).render('404');
+    next();
 });
 
 // Booting app
