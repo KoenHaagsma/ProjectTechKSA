@@ -15,6 +15,7 @@ connectDBMongoose();
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.use(express.static('public'));
 app.locals.basedir = app.get('views');
 
 app.use(express.json());
@@ -46,9 +47,7 @@ app.get('/mijn-matches', (req, res) => {
     res.render('my_matches');
 });
 
-app.get('/profile', (req, res) => {
-    res.render('profile');
-});
+
 
 // Add a book feature
 const addBook = require('./controllers/addBook');

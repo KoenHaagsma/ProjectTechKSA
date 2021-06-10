@@ -40,4 +40,11 @@ router.post('/addabook', (req, res) => {
     res.render('addBook');
 });
 
+router.get('/profile', async (req, res) => {
+    res.render('profile', {
+        books: await getBooks()
+    });
+    console.log(getBooks())
+});
+
 module.exports = router;

@@ -13,10 +13,12 @@ block content
         label Interests 
 
         label List of books
+            ul each book in books
+                li Title #{title.year}
+                li Author = author 
+                li Genre = genre
+             
 
-
-
-        h1 Hi
         form(action="updateUser" method="POST")
             label Fill in your current email
             input(name="email")
@@ -24,7 +26,9 @@ block content
             input(name="newEmail")
             button(type="submit") Change email
   
-            button(type="submit" href="/home") Back
+            button(type="submit" href="/home") 
+            
+            
 
 
 
