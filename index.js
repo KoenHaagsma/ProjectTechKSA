@@ -17,7 +17,6 @@ connectDBMongoose();
 const connectDBMongoose = require('./models/mongoose');
 connectDBMongoose();
 
-
 // Loading in user models
 const User = require('./controllers/user');
 const Book = require('./controllers/book');
@@ -43,16 +42,27 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+app.get('/register', (req, res) => {
+    res.render('register', {
+        title: 'Register',
+    });
+});
+
 app.get('/ontdekken', (req, res) => {
     res.render('my_matches');
 });
 
+app.get('/mijn-matches', (req, res) => {
+    res.render('my_matches');
+});
 
-/*  
-    ADD A BOOK 
-*/
+app.get('/profile', (req, res) => {
+    res.render('profile');
+});
+
+// Add a book feature
 const controller = require('./controllers/addBook');
-app.use('/', controller)
+app.use('/', controller);
 
 app.get('/addabook', (req, res) => {
     res.render('addBook');
@@ -60,25 +70,16 @@ app.get('/addabook', (req, res) => {
 
 app.post('/addabook', (req, res) => {
     const data = {
-        titel: req.body.titel, 
-        auteur: req.body.auteur, 
-        genre: req.body.genre
+        titel: req.body.titel,
+        auteur: req.body.auteur,
+        genre: req.body.genre,
     };
     saveData(data);
     res.render('addBook');
 });
 
-/*  
-    PROFILE 
-*/
-app.get('/profile', (req, res) => {
-    res.render('profile');
-});
-
-
-
-
-// Need to change to books
+// Matching feature
+// TODO: Need to change to books
 app.get('/ontdekken', (req, res) => {
     User.find({}, (err, users) => {
         if (err) {
@@ -124,10 +125,6 @@ app.get('/ontdekken', (req, res) => {
     });
 });
 
-app.get('/mijn-matches', (req, res) => {
-    res.render('my_matches');
-});
-
 // Need to change to my book matches
 app.get('/mijn-matches', (req, res) => {
     let matchedUsers = [];
@@ -159,44 +156,7 @@ app.get('/mijn-matches', (req, res) => {
     );
 });
 
-// Handling 404
-// TODO: Even kijken of ik use moet gebruiken of iets anders.
-app.use((req, res, next) => {
-    res.status(404).render('404');
-    next();
-});
-
-app.get('/register', (req, res) => {
-    res.render('pages/register', {
-        title: 'Register',
-    });
-});
-
-app.get('/login', (req, res) => {
-    res.render('pages/login', {
-        title: 'Login',
-    });
-});
-
-app.get('/delete', (req, res) => {
-    res.render('pages/delete', {
-        title: 'Delete account',
-    });
-});
-
-app.get('/home', (req, res) => {
-    res.render('pages/home', {
-        title: 'Logged in',
-    });
-});
-
-app.get('/update', (req, res) => {
-    res.render('pages/update', {
-        title: 'Update data',
-    });
-});
-
-// Functies om de app te gebruiken
+// Register/login user
 app.post('/registerUser', async (req, res) => {
     try {
         const newUser = new User({
@@ -238,6 +198,7 @@ app.post('/loginUser', (req, res) => {
     }
 });
 
+// Update user
 app.post('/updateUser', (req, res) => {
     User.findOneAndUpdate({ email: req.body.email }, { email: req.body.newEmail }, { new: true }, (error, data) => {
         if (error) {
@@ -248,6 +209,7 @@ app.post('/updateUser', (req, res) => {
     });
 });
 
+// Delete user
 app.post('/deleteUser', async (req, res) => {
     User.findOneAndDelete({ email: req.body.email }, (error, data) => {
         if (error) {
@@ -256,6 +218,13 @@ app.post('/deleteUser', async (req, res) => {
             res.redirect('/register');
         }
     });
+});
+
+// Handling 404
+// TODO: Even kijken of ik use moet gebruiken of iets anders.
+app.use((req, res, next) => {
+    res.status(404).render('404');
+    next();
 });
 
 // Booting app
