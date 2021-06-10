@@ -1,22 +1,36 @@
 const express = require('express');
 const chalk = require('chalk');
 require('dotenv').config();
-const app = express();
 const path = require('path');
 
+// Initializing app
+const app = express();
 const port = process.env.PORT || 3000;
 
 // Connecting mongoose
 const connectDBMongoose = require('./models/mongoose');
-
 connectDBMongoose();
+
+// Loading in user models
+const User = require('./controllers/user');
+const Book = require('./controllers/book');
 
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.locals.basedir = app.get('views');
 
-// Home route
+app.use(express.json());
+app.use(
+    express.urlencoded({
+        extended: true,
+    }),
+);
+
+// Serving static files (CSS, IMG, JS, etc.)
+app.use('/assets', express.static(path.join(__dirname, 'public')));
+
+// Routes
 app.get('/', (req, res) => {
     res.render('index');
 });
