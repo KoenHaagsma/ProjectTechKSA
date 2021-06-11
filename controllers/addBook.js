@@ -1,32 +1,50 @@
 const express = require('express');
 // middleware voor endpoints. nodig om dit extern
-const addBook = express.Router();
+const router = express.Router();
 const mongoose = require('mongoose');
-const book = require('./book');
+const books = require('./book');
 
 // collection, schema
-const newBoek = mongoose.model('book', book);
+const newBook = mongoose.model('book', books);
 
 // functie die data pakt en deze opslaat in mongoose
 function saveData(data) {
-    let newBook = new newBoek({
-        titel: data.titel,
-        auteur: data.auteur,
+    const newBooks = new newBook({
+        title: data.title,
+        author: data.author,
         genre: data.genre,
         entryDate: Date(),
     });
 
-    newBook.save((err) => {
-        console.log(`${newBook}`);
+    newBooks.save((err) => {
+        console.log(`${newBooks}`);
         if (err) return handleError(err);
     });
 }
 
-// functie die boekenlijst ophaalt
+// gets books from db
 async function getBooks() {
     // lean() transforms mongoose object to json object
-    const data = await newBoek.find().lean();
+    const data = await newBook.find().lean();
+    console.log(data)
     return data;
 }
 
-module.exports = addBook;
+
+router.post('/addabook', (req, res) => {
+    const data = {
+        title: req.body.title,
+        author: req.body.author,
+        genre: req.body.genre,
+    };
+    saveData(data);
+    res.render('addBook');
+});
+
+router.get('/profile', async (req, res) => {
+    res.render('profile', {
+        books: await getBooks()
+    });
+});
+
+module.exports = router;
