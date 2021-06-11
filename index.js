@@ -345,7 +345,7 @@ app.get('/mijn-matches', (req, res) => {
 // });
 
 // // Delete user
-// app.post('/deleteUser', async (req, res) => {
+// app.post('/deleteUser', (req, res) => {
 //     User.findOneAndDelete({ email: req.body.email }, (error, data) => {
 //         if (error) {
 //             console.log(error);
