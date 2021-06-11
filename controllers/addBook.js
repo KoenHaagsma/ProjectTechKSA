@@ -7,7 +7,7 @@ const books = require('./book');
 // collection, schema
 const newBook = mongoose.model('book', books);
 
-// functie die data pakt en deze opslaat in mongoose
+// function that saves books in db
 function saveData(data) {
     const newBooks = new newBook({
         title: data.title,
@@ -30,7 +30,6 @@ async function getBooks() {
     return data;
 }
 
-
 router.post('/addabook', (req, res) => {
     const data = {
         title: req.body.title,
@@ -41,10 +40,11 @@ router.post('/addabook', (req, res) => {
     res.render('addBook');
 });
 
-router.get('/profile', async (req, res) => {
-    res.render('profile', {
+router.get('/myProfile', async (req, res) => {
+    res.render('myProfile', {
         books: await getBooks()
     });
 });
 
-module.exports = router;
+
+module.exports = router
