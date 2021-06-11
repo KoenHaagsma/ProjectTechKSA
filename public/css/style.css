@@ -12,7 +12,7 @@ html {
 
 footer {
   width: 100%;
-  background-color: #16697aff;
+  background-color: 1 #16697aff;
   margin: 1rem 0rem;
   border-radius: 4px; }
   footer ul {
@@ -60,10 +60,11 @@ header {
         header ul li {
           padding: 1rem 0.8rem !important; } }
       header ul li a {
-        color: #16697aff;
+        color: 1 #16697aff;
         font-weight: bold;
         text-decoration: none; }
-      header ul li .login {
+      header ul li .login,
+      header ul li .logout {
         color: white;
         background-color: #ffa62bff;
         border: 1px solid #ffa62bff;

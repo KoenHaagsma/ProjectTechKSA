@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const chalk = require('chalk');
-console.log(process.env.DB_USER);
 const connectDBMongoose = async () => {
     try {
         await mongoose.connect(
@@ -10,7 +9,7 @@ const connectDBMongoose = async () => {
                 useCreateIndex: true,
                 useFindAndModify: false,
                 useUnifiedTopology: true,
-            }
+            },
         );
         console.log(chalk.greenBright('Connection with the database established'));
     } catch (error) {
