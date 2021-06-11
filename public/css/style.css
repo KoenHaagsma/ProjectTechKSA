@@ -63,7 +63,8 @@ header {
         color: 1 #16697aff;
         font-weight: bold;
         text-decoration: none; }
-      header ul li .login {
+      header ul li .login,
+      header ul li .logout {
         color: white;
         background-color: #ffa62bff;
         border: 1px solid #ffa62bff;

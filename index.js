@@ -119,9 +119,43 @@ app.post('/registerUser', async (req, res) => {
         const userJson = {
             email: req.body.email,
             password: hashedPassword,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
         };
+
         const newUser = new User(userJson);
         await newUser.save();
+
+        // Nodemailer to sent registration email to user
+        let transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            secureConnection: false,
+            port: 587,
+            secure: false, // true for 465, false for other ports
+            auth: {
+                user: `${process.env.MAIL_USER}`,
+                pass: `${process.env.MAIL_PASS}`,
+            },
+            tls: {
+                ciphers: 'SSLv3',
+            },
+        });
+
+        const msg = {
+            from: `${process.env.MAIL_ADRES}`, // sender address
+            to: `${req.body.email}`, // list of receivers
+            subject: `Welcome at KASJMatches: ${req.body.firstName} ${req.body.lastName}`, // Subject line
+            text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
+        };
+
+        await transporter.sendMail(msg, function (err, info) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log('Email sent!');
+        });
+
         res.redirect('/login');
         return;
     } catch (error) {
