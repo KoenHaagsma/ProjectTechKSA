@@ -4,10 +4,11 @@ require('dotenv').config();
 const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const nodemailer = require('nodemailer');
 
 // Initializing app
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 // Connecting mongoose
 const connectDBMongoose = require('./models/mongoose');
@@ -100,7 +101,15 @@ app.get('/mijn-matches', (req, res) => {
 
 // Watch my profile route
 app.get('/profile', (req, res) => {
-    res.render('profile');
+    if (req.session.userId) {
+        User.findOne({ _id: req.session.userId }, function (err, user) {
+            res.render('profile', {
+                user: user,
+            });
+        });
+    } else {
+        res.redirect('/login');
+    }
 });
 
 // Registering a user
@@ -133,10 +142,16 @@ app.post('/loginUser', (req, res) => {
             if (user) {
                 bcrypt
                     .compare(password, user.password)
-                    .then(() => {
-                        req.session.userId = user._id;
-                        res.redirect('/home');
-                        return;
+                    .then((isSuccessful) => {
+                        if (isSuccessful) {
+                            req.session.userId = user._id;
+                            res.redirect('/home');
+                            return;
+                        } else {
+                            console.log('Wrong password entered');
+                            res.redirect('/login');
+                            return;
+                        }
                     })
                     .catch(console.log('Wrong password'));
             } else {
@@ -246,27 +261,28 @@ app.get('/mijn-matches', (req, res) => {
     );
 });
 
-// Update user
-app.post('/updateUser', (req, res) => {
-    User.findOneAndUpdate({ email: req.body.email }, { email: req.body.newEmail }, { new: true }, (error, data) => {
-        if (error) {
-            console.log(error);
-        } else {
-            res.redirect('/home');
-        }
-    });
-});
+// Do we still need this?
+// // Update user
+// app.post('/updateUser', (req, res) => {
+//     User.findOneAndUpdate({ email: req.body.email }, { email: req.body.newEmail }, { new: true }, (error, data) => {
+//         if (error) {
+//             console.log(error);
+//         } else {
+//             res.redirect('/home');
+//         }
+//     });
+// });
 
-// Delete user
-app.post('/deleteUser', async (req, res) => {
-    User.findOneAndDelete({ email: req.body.email }, (error, data) => {
-        if (error) {
-            console.log(error);
-        } else {
-            res.redirect('/register');
-        }
-    });
-});
+// // Delete user
+// app.post('/deleteUser', async (req, res) => {
+//     User.findOneAndDelete({ email: req.body.email }, (error, data) => {
+//         if (error) {
+//             console.log(error);
+//         } else {
+//             res.redirect('/register');
+//         }
+//     });
+// });
 
 // Logging out the user
 app.post('/logout', (req, res) => {
