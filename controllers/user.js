@@ -3,11 +3,11 @@ const userSchema = new mongoose.Schema(
     {
         email: String,
         password: String,
+        firstName: String,
+        lastName: String,
         matched: [String],
         ignored: [String],
         genres: [String],
-        firstName: String,
-        lastName: String,
     },
     { timestamps: true, typeKey: '$type' },
 );

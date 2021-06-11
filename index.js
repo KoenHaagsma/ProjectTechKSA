@@ -50,53 +50,6 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-// TEMPORARY FOR NODEMAILER ---------------------
-
-app.get('/mail', (req, res) => {
-    res.send('Hello mail!');
-});
-
-app.post('/mail', (req, res) => {
-    let transporter = nodemailer.createTransport({
-        service: 'hotmail',
-        secureConnection: false,
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: 'KAJSMatches@outlook.com',
-            pass: '9xvHpCYdxr8pwkG',
-        },
-        tls: {
-            ciphers: 'SSLv3',
-        },
-    });
-
-    const msg = {
-        from: 'KAJSMatches@outlook.com', // sender address
-        to: 'koenhaagsma123@hotmail.nl', // list of receivers
-        subject: 'Hello ✔', // Subject line
-        text: 'Hello world?', // plain text body
-    };
-
-    // send mail with defined transport object
-    transporter.sendMail(msg, function (err, info) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log('Sent' + info.response);
-    });
-
-    // console.log('Message sent: %s', info.messageId);
-    // // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    // // Preview only available when sending through an Ethereal account
-    // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    // // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-});
-
-// ----------------------------------------------
-
 // Route if user is logged in.
 app.get('/home', (req, res) => {
     if (req.session.userId) {
@@ -166,9 +119,43 @@ app.post('/registerUser', async (req, res) => {
         const userJson = {
             email: req.body.email,
             password: hashedPassword,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
         };
+
         const newUser = new User(userJson);
         await newUser.save();
+
+        // Nodemailer to sent registration email to user
+        let transporter = nodemailer.createTransport({
+            service: 'hotmail',
+            secureConnection: false,
+            port: 587,
+            secure: false, // true for 465, false for other ports
+            auth: {
+                user: `${process.env.MAIL_USER}`,
+                pass: `${process.env.MAIL_PASS}`,
+            },
+            tls: {
+                ciphers: 'SSLv3',
+            },
+        });
+
+        const msg = {
+            from: `${process.env.MAIL_ADRES}`, // sender address
+            to: `${req.body.email}`, // list of receivers
+            subject: `Welcome at KASJMatches: ${req.body.firstName} ${req.body.lastName}`, // Subject line
+            text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
+        };
+
+        await transporter.sendMail(msg, function (err, info) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log('Email sent!');
+        });
+
         res.redirect('/login');
         return;
     } catch (error) {
