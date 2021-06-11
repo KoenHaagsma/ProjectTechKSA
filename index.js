@@ -12,15 +12,19 @@ const port = process.env.PORT;
 
 // Connecting mongoose
 const connectDBMongoose = require('./models/mongoose');
+
+
 connectDBMongoose();
 
 // Loading in user models
 const User = require('./controllers/User');
 const Book = require('./controllers/Book');
 
+
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.use(express.static('public'));
 app.locals.basedir = app.get('views');
 
 // Bodyparser from Express
@@ -98,6 +102,9 @@ app.get('/mijn-matches', (req, res) => {
         res.redirect('/login');
     }
 });
+
+
+
 
 // Watch my profile route
 app.get('/profile', (req, res) => {
@@ -199,18 +206,20 @@ app.post('/loginUser', (req, res) => {
     }
 });
 
+
 // Add a book feature
-const controller = require('./controllers/addBook');
-app.use('/', controller);
+const addBook = require('./controllers/addBook');
+app.use('/', addBook);
 
 app.get('/addabook', (req, res) => {
     res.render('addBook');
+    console.log(addBook)
 });
 
 app.post('/addabook', (req, res) => {
     const data = {
-        titel: req.body.titel,
-        auteur: req.body.auteur,
+        title: req.body.title,
+        author: req.body.author,
         genre: req.body.genre,
     };
     saveData(data);
