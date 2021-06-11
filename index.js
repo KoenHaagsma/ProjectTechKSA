@@ -13,13 +13,11 @@ const port = process.env.PORT;
 // Connecting mongoose
 const connectDBMongoose = require('./models/mongoose');
 
-
 connectDBMongoose();
 
 // Loading in user models
 const User = require('./controllers/User');
 const Book = require('./controllers/Book');
-
 
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
@@ -103,9 +101,6 @@ app.get('/mijn-matches', (req, res) => {
     }
 });
 
-
-
-
 // Watch my profile route
 app.get('/profile', (req, res) => {
     if (req.session.userId) {
@@ -151,8 +146,19 @@ app.post('/registerUser', async (req, res) => {
         const msg = {
             from: `${process.env.MAIL_ADRES}`, // sender address
             to: `${req.body.email}`, // list of receivers
+            attachments: [
+                {
+                    filename: 'Puppy.png',
+                    path: './public/images/puppy.jpg',
+                    cid: 'uniquePuppyImage.jpg',
+                },
+            ],
             subject: `Welcome at KASJMatches: ${req.body.firstName} ${req.body.lastName}`, // Subject line
             text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
+            html: `<h1>Thanks! ${req.body.firstName} for registering to KAJSMatches.</h1>
+            <h2>We hope that you enjoy your time with us</h2>
+            <p>Here a puppy for you to brighten up your day!</p>
+            <img src='cid:uniquePuppyImage.jpg'>`,
         };
 
         await transporter.sendMail(msg, function (err, info) {
@@ -206,14 +212,13 @@ app.post('/loginUser', (req, res) => {
     }
 });
 
-
 // Add a book feature
 const addBook = require('./controllers/addBook');
 app.use('/', addBook);
 
 app.get('/addabook', (req, res) => {
     res.render('addBook');
-    console.log(addBook)
+    console.log(addBook);
 });
 
 app.post('/addabook', (req, res) => {
