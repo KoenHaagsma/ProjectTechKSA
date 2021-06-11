@@ -4,7 +4,9 @@ require('dotenv').config();
 const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const flasher = require('express-flash');
 const nodemailer = require('nodemailer');
+const cookieParser = require('cookie-parser');
 
 // Initializing app
 const app = express();
@@ -36,6 +38,9 @@ app.use(
 // Serving static files (CSS, IMG, JS, etc.)
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 
+// cookie-parser for flash messages
+app.use(cookieParser(process.env.SESSION_SECRET));
+
 // Express session
 app.use(
     session({
@@ -46,6 +51,8 @@ app.use(
         resave: false,
     }),
 );
+
+app.use(flasher());
 
 // Routes
 app.get('/', (req, res) => {
@@ -61,6 +68,7 @@ app.get('/home', (req, res) => {
             });
         });
     } else {
+        req.flash('exists', 'You are logged out, log back in again');
         res.redirect('/login');
     }
 });
@@ -84,6 +92,7 @@ app.get('/ontdekken', (req, res) => {
             });
         });
     } else {
+        req.flash('exists', 'You are logged out, log back in again');
         res.redirect('/login');
     }
 });
@@ -97,6 +106,7 @@ app.get('/mijn-matches', (req, res) => {
             });
         });
     } else {
+        req.flash('exists', 'You are logged out, log back in again');
         res.redirect('/login');
     }
 });
@@ -110,6 +120,7 @@ app.get('/profile', (req, res) => {
             });
         });
     } else {
+        req.flash('exists', 'You are logged out, log back in again');
         res.redirect('/login');
     }
 });
@@ -117,60 +128,69 @@ app.get('/profile', (req, res) => {
 // Registering a user
 app.post('/registerUser', async (req, res) => {
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 14);
-        const userJson = {
-            email: req.body.email,
-            password: hashedPassword,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-        };
+        User.findOne({ email: req.body.email }, async function (err, user) {
+            if (user) {
+                console.log('User already exists in our database');
+                req.flash('exists', 'Email already exists in our database');
+                res.redirect('/login');
+                return;
+            } else {
+                const hashedPassword = await bcrypt.hash(req.body.password, 14);
+                const userJson = {
+                    email: req.body.email,
+                    password: hashedPassword,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                };
 
-        const newUser = new User(userJson);
-        await newUser.save();
+                const newUser = new User(userJson);
+                await newUser.save();
 
-        // Nodemailer to sent registration email to user
-        let transporter = nodemailer.createTransport({
-            service: 'hotmail',
-            secureConnection: false,
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: `${process.env.MAIL_USER}`,
-                pass: `${process.env.MAIL_PASS}`,
-            },
-            tls: {
-                ciphers: 'SSLv3',
-            },
-        });
+                // Nodemailer to sent registration email to user
+                let transporter = nodemailer.createTransport({
+                    service: 'hotmail',
+                    secureConnection: false,
+                    port: 587,
+                    secure: false, // true for 465, false for other ports
+                    auth: {
+                        user: `${process.env.MAIL_USER}`,
+                        pass: `${process.env.MAIL_PASS}`,
+                    },
+                    tls: {
+                        ciphers: 'SSLv3',
+                    },
+                });
 
-        const msg = {
-            from: `${process.env.MAIL_ADRES}`, // sender address
-            to: `${req.body.email}`, // list of receivers
-            attachments: [
-                {
-                    filename: 'Puppy.png',
-                    path: './public/images/puppy.jpg',
-                    cid: 'uniquePuppyImage.jpg',
-                },
-            ],
-            subject: `Welcome at KASJMatches: ${req.body.firstName} ${req.body.lastName}`, // Subject line
-            text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
-            html: `<h1>Thanks! ${req.body.firstName} for registering to KAJSMatches.</h1>
-            <h2>We hope that you enjoy your time with us</h2>
-            <p>Here a puppy for you to brighten up your day!</p>
-            <img src='cid:uniquePuppyImage.jpg'>`,
-        };
+                const msg = {
+                    from: `${process.env.MAIL_ADRES}`, // sender address
+                    to: `${req.body.email}`, // list of receivers
+                    attachments: [
+                        {
+                            filename: 'Puppy.png',
+                            path: './public/images/puppy.jpg',
+                            cid: 'uniquePuppyImage.jpg',
+                        },
+                    ],
+                    subject: `Welcome at KASJMatches: ${req.body.firstName} ${req.body.lastName}`, // Subject line
+                    text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
+                    html: `<h1>Thanks! ${req.body.firstName} for registering to KAJSMatches.</h1>
+                        <h2>We hope that you enjoy your time with us</h2>
+                        <p>Here a puppy for you to brighten up your day!</p>
+                        <img src='cid:uniquePuppyImage.jpg'>`,
+                };
 
-        await transporter.sendMail(msg, function (err, info) {
-            if (err) {
-                console.log(err);
+                await transporter.sendMail(msg, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log('Email sent!');
+                });
+                req.flash('exists', 'E-mail has been send as a confirmation that you"ve registered');
+                res.redirect('/login');
                 return;
             }
-            console.log('Email sent!');
         });
-
-        res.redirect('/login');
-        return;
     } catch (error) {
         console.log(error);
         res.status(404).render('404', {
@@ -192,10 +212,12 @@ app.post('/loginUser', (req, res) => {
                     .then((isSuccessful) => {
                         if (isSuccessful) {
                             req.session.userId = user._id;
+                            req.flash('exists', 'Welcome back!');
                             res.redirect('/home');
                             return;
                         } else {
                             console.log('Wrong password entered');
+                            req.flash('exists', 'You have entered a wrong password');
                             res.redirect('/login');
                             return;
                         }
@@ -203,6 +225,7 @@ app.post('/loginUser', (req, res) => {
                     .catch(console.log('Wrong password'));
             } else {
                 console.log('User not found');
+                req.flash('exists', 'We didn"t find you in our database, register instead');
                 res.redirect('/login');
                 return;
             }
