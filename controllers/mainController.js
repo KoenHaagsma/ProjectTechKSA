@@ -2,13 +2,14 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
-// middleware voor endpoints. nodig om dit extern
+// middleware for endpoints. needed to extern
 const router = express.Router();
 
 
 const getBooks = require('./modules/getBooks');
 const saveData = require('./modules/addBook');
 
+// Loading in user models
 const User = require('../schema/user');
 
 // Express session
