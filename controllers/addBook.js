@@ -2,7 +2,7 @@ const express = require('express');
 // middleware voor endpoints. nodig om dit extern
 const router = express.Router();
 const mongoose = require('mongoose');
-const books = require('./book');
+const books = require('../schema/book');
 
 // collection, schema
 const newBook = mongoose.model('book', books);

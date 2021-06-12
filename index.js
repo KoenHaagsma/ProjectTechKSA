@@ -17,8 +17,8 @@ const connectDBMongoose = require('./models/mongoose');
 connectDBMongoose();
 
 // Loading in user models
-const User = require('./controllers/User');
-const Book = require('./controllers/Book');
+const User = require('./schema/User');
+const Book = require('./schema/Book');
 
 
 // Load view engine | Path: Directory name + map name.
