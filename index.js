@@ -208,23 +208,8 @@ app.post('/loginUser', (req, res) => {
 
 
 // Add a book feature
-const addBook = require('./controllers/addBook');
-app.use('/', addBook);
-
-app.get('/addabook', (req, res) => {
-    res.render('addBook');
-    console.log(addBook)
-});
-
-app.post('/addabook', (req, res) => {
-    const data = {
-        title: req.body.title,
-        author: req.body.author,
-        genre: req.body.genre,
-    };
-    saveData(data);
-    res.render('addBook');
-});
+const mainController = require('./controllers/mainController');
+app.use('/', mainController);
 
 // Matching feature
 // TODO: Need to change to books
