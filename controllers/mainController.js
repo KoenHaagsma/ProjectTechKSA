@@ -159,12 +159,13 @@ router.post('/logout', (req, res) => {
 });
 
 
-// Add book to database feature
+// Get addabook page
 router.get('/addabook', (req, res) => {
     res.render('addBook');
    
  });
 
+ // Add a book to database
 router.post('/addabook', (req, res) => {
     const data = {
         title: req.body.title,
