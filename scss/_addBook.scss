@@ -1,39 +1,43 @@
-section {  
+section.addBook {  
+
     border: 1px solid rgb(240, 240, 240);
-    border-radius: 0.625em;
-    box-shadow: 0.0625em -0.0625em .0.3125em 0.0625em rgba(0,0,0,0.11);
-    width: 50em;
-    height: 30vh;
+    border-radius: 20px;
+    box-shadow: 4px -2px 5px -1px rgba(0, 0, 0, 0.11);
+    min-width: 50em;
+    width: 100%;
+    height: 40vh;
     padding: 2em;
     h1 {
         color: $ming;
 
     }
-
     form {
         display: grid;
         grid-gap: 2em;
+        width: 100%;
         #addBook{
             display: grid;
             grid-template-rows: repeat(2, 2em);
+            width: 100%;
         }
-        
         label {
             font-weight: 600;
-            
         }
         input {
             background-color: rgba(0,0,0,0.11);
-
+            width: 100%;
+            border-radius: 10px;
+            border: none;
+            padding: 0.75em;
         }
-
         button {
             color:rgb(240, 240, 240); 
             background-color: $ming;
             font-weight: 600;
+            padding: 0.75em;
             border: none;
             cursor: pointer;
-            
+            border-radius: 8px;
         }
     }
 
