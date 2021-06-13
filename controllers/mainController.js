@@ -107,7 +107,6 @@ router.post('/registerUser', async (req, res) => {
                         <h2>We hope that you enjoy your time with us</h2>
                         <h3>You registered with: ${req.body.email}</h3>
                         <h3>Name entered: ${req.body.firstName} ${req.body.lastName}</h3>
-                        <h3>At time:${Date.now()}</h3>
                         <p>Here a puppy for you to brighten up your day!</p>
                         <img src='cid:uniquePuppyImage.jpg'>`,
                 };
