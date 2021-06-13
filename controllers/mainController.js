@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
 const flasher = require('express-flash');
+require('dotenv').config();
 // middleware for endpoints. needed to extern
 const router = express.Router();
 
@@ -77,7 +78,7 @@ router.post('/registerUser', async (req, res) => {
 
                 // Nodemailer to sent registration email to user
                 let transporter = nodemailer.createTransport({
-                    service: 'hotmail',
+                    host: 'smtp.ethereal.email',
                     secureConnection: false,
                     port: 587,
                     secure: false, // true for 465, false for other ports
@@ -104,6 +105,9 @@ router.post('/registerUser', async (req, res) => {
                     text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
                     html: `<h1>Thanks! ${req.body.firstName} for registering to KAJSMatches.</h1>
                         <h2>We hope that you enjoy your time with us</h2>
+                        <h3>You registered with: ${req.body.email}</h3>
+                        <h3>Name entered: ${req.body.firstName} ${req.body.lastName}</h3>
+                        <h3>At time:${Date.now()}</h3>
                         <p>Here a puppy for you to brighten up your day!</p>
                         <img src='cid:uniquePuppyImage.jpg'>`,
                 };
@@ -115,6 +119,7 @@ router.post('/registerUser', async (req, res) => {
                     }
                     console.log('Email sent!');
                 });
+                console.log();
                 req.flash('exists', 'E-mail has been send as a confirmation that you"ve registered');
                 res.redirect('/login');
                 return;
