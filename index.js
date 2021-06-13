@@ -38,6 +38,11 @@ app.use(
 // Serving static files (CSS, IMG, JS, etc.)
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 
+
+// Route to mainController
+const mainController = require('./controllers/mainController');
+app.use('/', mainController);
+
 // cookie-parser for flash messages
 app.use(cookieParser(process.env.SESSION_SECRET));
 
@@ -354,20 +359,6 @@ app.get('/mijn-matches', (req, res) => {
 //         }
 //     });
 // });
-
-// Logging out the user
-app.post('/logout', (req, res) => {
-    req.session.destroy((err) => {});
-    console.log('User is logged out');
-    res.redirect('/');
-});
-
-// Handling 404
-// TODO: Even kijken of ik use moet gebruiken of iets anders.
-app.use((req, res, next) => {
-    res.status(404).render('404');
-    next();
-});
 
 // Booting app
 app.listen(port, () => {
