@@ -179,7 +179,7 @@ router.post('/logout', (req, res) => {
 router.get('/addabook', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
-            res.render('profile', {
+            res.render('addBook', {
                 user: user,
             });
         });
