@@ -2,21 +2,18 @@ extends loggedInLayout
 
 block content
     section 
-        h1 Add a book to my list 
+        h1 Add a book to my list: 
         form(action="" method="POST")
             #addBook.input
-                label Title 
+                label Title: 
                 input(type="text" name="title")
 
             #addBook.input
-                label Author 
+                label Author:
                 input(type="text" name="author")
 
             #addBook.input
-                label Genre 
+                label Genre: 
                 input(type="text" name="genre")
 
-            #addBook.input
-                label Image 
-                input(type="file" name="image")
             button(type="submit") Submit

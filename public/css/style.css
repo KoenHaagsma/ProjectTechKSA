@@ -12,7 +12,7 @@ html {
 
 footer {
   width: 100%;
-  background-color: 1 #16697aff;
+  background-color: #16697aff;
   margin: 1rem 0rem;
   border-radius: 4px; }
   footer ul {
@@ -60,7 +60,7 @@ header {
         header ul li {
           padding: 1rem 0.8rem !important; } }
       header ul li a {
-        color: 1 #16697aff;
+        color: #16697aff;
         font-weight: bold;
         text-decoration: none; }
       header ul li .login,
@@ -74,3 +74,29 @@ header {
 main {
   margin-top: 6.875rem;
   height: 500px; }
+
+section {
+  border: 1px solid #f0f0f0;
+  border-radius: 0.625em;
+  box-shadow: 0.0625em -0.0625em 0 0.3125em 0.0625em rgba(0, 0, 0, 0.11);
+  width: 50em;
+  height: 30vh;
+  padding: 2em; }
+  section h1 {
+    color: #16697aff; }
+  section form {
+    display: grid;
+    grid-gap: 2em; }
+    section form #addBook {
+      display: grid;
+      grid-template-rows: repeat(2, 2em); }
+    section form label {
+      font-weight: 600; }
+    section form input {
+      background-color: rgba(0, 0, 0, 0.11); }
+    section form button {
+      color: #f0f0f0;
+      background-color: #16697aff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer; }
