@@ -49,6 +49,7 @@ router.get('/home', (req, res) => {
             });
         });
     } else {
+        req.flash('exists', 'You need to log back in again');
         res.redirect('/login');
     }
 });
@@ -62,6 +63,7 @@ router.get('/profile', (req, res) => {
             });
         });
     } else {
+        req.flash('exists', 'You need to log back in again');
         res.redirect('/login');
     }
 });
@@ -69,49 +71,69 @@ router.get('/profile', (req, res) => {
 // Registering a user
 router.post('/registerUser', async (req, res) => {
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 14);
-        const userJson = {
-            email: req.body.email,
-            password: hashedPassword,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-        };
+        User.findOne({ email: req.body.email }, async function (err, user) {
+            if (user) {
+                console.log('User already exists in our database');
+                req.flash('exists', 'Email already exists in our database');
+                res.redirect('/login');
+                return;
+            } else {
+                const hashedPassword = await bcrypt.hash(req.body.password, 14);
+                const userJson = {
+                    email: req.body.email,
+                    password: hashedPassword,
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                };
 
-        const newUser = new User(userJson);
-        await newUser.save();
+                const newUser = new User(userJson);
+                await newUser.save();
 
-        // Nodemailer to sent registration email to user
-        let transporter = nodemailer.createTransport({
-            service: 'hotmail',
-            secureConnection: false,
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: `${process.env.MAIL_USER}`,
-                pass: `${process.env.MAIL_PASS}`,
-            },
-            tls: {
-                ciphers: 'SSLv3',
-            },
-        });
+                // Nodemailer to sent registration email to user
+                let transporter = nodemailer.createTransport({
+                    service: 'hotmail',
+                    secureConnection: false,
+                    port: 587,
+                    secure: false, // true for 465, false for other ports
+                    auth: {
+                        user: `${process.env.MAIL_USER}`,
+                        pass: `${process.env.MAIL_PASS}`,
+                    },
+                    tls: {
+                        ciphers: 'SSLv3',
+                    },
+                });
 
-        const msg = {
-            from: `${process.env.MAIL_ADRES}`, // sender address
-            to: `${req.body.email}`, // list of receivers
-            subject: `Welcome at KASJMatches: ${req.body.firstName} ${req.body.lastName}`, // Subject line
-            text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
-        };
+                const msg = {
+                    from: `${process.env.MAIL_ADRES}`, // sender address
+                    to: `${req.body.email}`, // list of receivers
+                    attachments: [
+                        {
+                            filename: 'Puppy.png',
+                            path: './public/images/puppy.jpg',
+                            cid: 'uniquePuppyImage.jpg',
+                        },
+                    ],
+                    subject: `Welcome at KASJMatches: ${req.body.firstName} ${req.body.lastName}`, // Subject line
+                    text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
+                    html: `<h1>Thanks! ${req.body.firstName} for registering to KAJSMatches.</h1>
+                        <h2>We hope that you enjoy your time with us</h2>
+                        <p>Here a puppy for you to brighten up your day!</p>
+                        <img src='cid:uniquePuppyImage.jpg'>`,
+                };
 
-        await transporter.sendMail(msg, function (err, info) {
-            if (err) {
-                console.log(err);
+                await transporter.sendMail(msg, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log('Email sent!');
+                });
+                req.flash('exists', 'E-mail has been send as a confirmation that you"ve registered');
+                res.redirect('/login');
                 return;
             }
-            console.log('Email sent!');
         });
-
-        res.redirect('/login');
-        return;
     } catch (error) {
         console.log(error);
         res.status(404).render('404', {
@@ -133,10 +155,12 @@ router.post('/loginUser', (req, res) => {
                     .then((isSuccessful) => {
                         if (isSuccessful) {
                             req.session.userId = user._id;
+                            req.flash('exists', 'Welcome back!');
                             res.redirect('/home');
                             return;
                         } else {
                             console.log('Wrong password entered');
+                            req.flash('exists', 'You"ve entered a wrong password');
                             res.redirect('/login');
                             return;
                         }
@@ -144,6 +168,7 @@ router.post('/loginUser', (req, res) => {
                     .catch(console.log('Wrong password'));
             } else {
                 console.log('User not found');
+                req.flash('exists', 'We didn"t find you in our database');
                 res.redirect('/login');
                 return;
             }
@@ -162,7 +187,16 @@ router.post('/logout', (req, res) => {
 
 // Get addabook page
 router.get('/addabook', (req, res) => {
-    res.render('addBook');
+    if (req.session.userId) {
+        User.findOne({ _id: req.session.userId }, function (err, user) {
+            res.render('profile', {
+                user: user,
+            });
+        });
+    } else {
+        req.flash('exists', 'You need to log back in again');
+        res.render('addBook');
+    }
 });
 
 // Add a book to database
@@ -178,10 +212,21 @@ router.post('/addabook', (req, res) => {
 
 // Reads out list of books
 router.get('/myProfile', async (req, res) => {
-    res.render('myProfile', {
-        books: await getBooks(),
-    });
+    if (req.session.userId) {
+        User.findOne({ _id: req.session.userId }, function (err, user) {
+            res.render('profile', {
+                user: user,
+            });
+        });
+    } else {
+        req.flash('exists', 'You need to log back in again');
+        res.render('myProfile', {
+            books: await getBooks(),
+        });
+    }
 });
+
+// ---------------------------------------------------------------------------
 
 // Matching feature
 // TODO: Need to change to books
@@ -239,6 +284,7 @@ router.get('/ontdekken', (req, res) => {
             });
         });
     } else {
+        req.flash('exists', 'You need to log back in again');
         res.redirect('/login');
     }
 });
@@ -247,45 +293,41 @@ router.get('/ontdekken', (req, res) => {
 router.get('/mijn-matches', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
-            res.render('my_matches', {
-                user: user,
+            let matchedUsers = [];
+            loggedInUser.matched.forEach((user) => {
+                matchedUsers.push(user);
             });
+            User.find(
+                {
+                    _id: { $in: matchedUsers },
+                },
+                (err, users) => {
+                    if (err) {
+                        console.log(err);
+                        res.redirect('/');
+                    } else {
+                        if (matchedUsers.length === 0) {
+                            res.render('my_matches_empty', {
+                                title: 'Mijn Matches',
+                                empty: 'Oeps! Het lijkt erop dat je nog geen matches hebt geaccepteerd.',
+                            });
+                        } else {
+                            res.render('my_matches', {
+                                title: 'Mijn Matches',
+                                boeken: users,
+                            });
+                        }
+                    }
+                },
+            );
         });
     } else {
+        req.flash('exists', 'You need to log back in again');
         res.redirect('/login');
     }
 });
 
-// TODO: Need to change to my book matches
-router.get('/mijn-matches', (req, res) => {
-    let matchedUsers = [];
-    loggedInUser.matched.forEach((user) => {
-        matchedUsers.push(user);
-    });
-    User.find(
-        {
-            _id: { $in: matchedUsers },
-        },
-        (err, users) => {
-            if (err) {
-                console.log(err);
-                res.redirect('/');
-            } else {
-                if (matchedUsers.length === 0) {
-                    res.render('my_matches_empty', {
-                        title: 'Mijn Matches',
-                        empty: 'Oeps! Het lijkt erop dat je nog geen matches hebt geaccepteerd.',
-                    });
-                } else {
-                    res.render('my_matches', {
-                        title: 'Mijn Matches',
-                        boeken: users,
-                    });
-                }
-            }
-        },
-    );
-});
+// ---------------------------------------------------------------------------
 
 // Handling 404
 // TODO: Even kijken of ik use moet gebruiken of iets anders.
