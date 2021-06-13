@@ -9,6 +9,7 @@ const connectDBMongoose = async () => {
                 useCreateIndex: true,
                 useFindAndModify: false,
                 useUnifiedTopology: true,
+                tlsInsecure: true,
             },
         );
         console.log(chalk.greenBright('Connection with the database established'));

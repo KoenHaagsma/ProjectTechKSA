@@ -3,7 +3,6 @@ const chalk = require('chalk');
 require('dotenv').config();
 const path = require('path');
 
-
 // Initializing app
 const app = express();
 const port = process.env.PORT;
@@ -33,30 +32,6 @@ app.use('/assets', express.static(path.join(__dirname, 'public')));
 // Route to mainController
 const mainController = require('./controllers/mainController');
 app.use('/', mainController);
-
-
-// Do we still need this?
-// // Update user
-// app.post('/updateUser', (req, res) => {
-//     User.findOneAndUpdate({ email: req.body.email }, { email: req.body.newEmail }, { new: true }, (error, data) => {
-//         if (error) {
-//             console.log(error);
-//         } else {
-//             res.redirect('/home');
-//         }
-//     });
-// });
-
-// // Delete user
-// app.post('/deleteUser', async (req, res) => {
-//     User.findOneAndDelete({ email: req.body.email }, (error, data) => {
-//         if (error) {
-//             console.log(error);
-//         } else {
-//             res.redirect('/register');
-//         }
-//     });
-// });
 
 // Booting app
 app.listen(port, () => {
