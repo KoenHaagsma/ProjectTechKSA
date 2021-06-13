@@ -54,20 +54,6 @@ router.get('/home', (req, res) => {
     }
 });
 
-// Watch my profile route
-router.get('/profile', (req, res) => {
-    if (req.session.userId) {
-        User.findOne({ _id: req.session.userId }, function (err, user) {
-            res.render('profile', {
-                user: user,
-            });
-        });
-    } else {
-        req.flash('exists', 'You need to log back in again');
-        res.redirect('/login');
-    }
-});
-
 // Registering a user
 router.post('/registerUser', async (req, res) => {
     try {
@@ -214,7 +200,7 @@ router.post('/addabook', (req, res) => {
 router.get('/myProfile', async (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
-            res.render('profile', {
+            res.render('myProfile', {
                 user: user,
             });
         });
