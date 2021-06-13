@@ -17,10 +17,6 @@ const connectDBMongoose = require('./models/mongoose');
 
 connectDBMongoose();
 
-// Loading in user models
-const User = require('./controllers/User');
-const Book = require('./controllers/Book');
-
 // Load view engine | Path: Directory name + map name.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -37,7 +33,6 @@ app.use(
 
 // Serving static files (CSS, IMG, JS, etc.)
 app.use('/assets', express.static(path.join(__dirname, 'public')));
-
 
 // Route to mainController
 const mainController = require('./controllers/mainController');
@@ -131,79 +126,79 @@ app.get('/profile', (req, res) => {
 });
 
 // Registering a user
-app.post('/registerUser', async (req, res) => {
-    try {
-        User.findOne({ email: req.body.email }, async function (err, user) {
-            if (user) {
-                console.log('User already exists in our database');
-                req.flash('exists', 'Email already exists in our database');
-                res.redirect('/login');
-                return;
-            } else {
-                const hashedPassword = await bcrypt.hash(req.body.password, 14);
-                const userJson = {
-                    email: req.body.email,
-                    password: hashedPassword,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                };
+// app.post('/registerUser', async (req, res) => {
+//     try {
+//         User.findOne({ email: req.body.email }, async function (err, user) {
+//             if (user) {
+//                 console.log('User already exists in our database');
+//                 req.flash('exists', 'Email already exists in our database');
+//                 res.redirect('/login');
+//                 return;
+//             } else {
+//                 const hashedPassword = await bcrypt.hash(req.body.password, 14);
+//                 const userJson = {
+//                     email: req.body.email,
+//                     password: hashedPassword,
+//                     firstName: req.body.firstName,
+//                     lastName: req.body.lastName,
+//                 };
 
-                const newUser = new User(userJson);
-                await newUser.save();
+//                 const newUser = new User(userJson);
+//                 await newUser.save();
 
-                // Nodemailer to sent registration email to user
-                let transporter = nodemailer.createTransport({
-                    service: 'hotmail',
-                    secureConnection: false,
-                    port: 587,
-                    secure: false, // true for 465, false for other ports
-                    auth: {
-                        user: `${process.env.MAIL_USER}`,
-                        pass: `${process.env.MAIL_PASS}`,
-                    },
-                    tls: {
-                        ciphers: 'SSLv3',
-                    },
-                });
+//                 // Nodemailer to sent registration email to user
+//                 let transporter = nodemailer.createTransport({
+//                     service: 'hotmail',
+//                     secureConnection: false,
+//                     port: 587,
+//                     secure: false, // true for 465, false for other ports
+//                     auth: {
+//                         user: `${process.env.MAIL_USER}`,
+//                         pass: `${process.env.MAIL_PASS}`,
+//                     },
+//                     tls: {
+//                         ciphers: 'SSLv3',
+//                     },
+//                 });
 
-                const msg = {
-                    from: `${process.env.MAIL_ADRES}`, // sender address
-                    to: `${req.body.email}`, // list of receivers
-                    attachments: [
-                        {
-                            filename: 'Puppy.png',
-                            path: './public/images/puppy.jpg',
-                            cid: 'uniquePuppyImage.jpg',
-                        },
-                    ],
-                    subject: `Welcome at KASJMatches: ${req.body.firstName} ${req.body.lastName}`, // Subject line
-                    text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
-                    html: `<h1>Thanks! ${req.body.firstName} for registering to KAJSMatches.</h1>
-                        <h2>We hope that you enjoy your time with us</h2>
-                        <p>Here a puppy for you to brighten up your day!</p>
-                        <img src='cid:uniquePuppyImage.jpg'>`,
-                };
+//                 const msg = {
+//                     from: `${process.env.MAIL_ADRES}`, // sender address
+//                     to: `${req.body.email}`, // list of receivers
+//                     attachments: [
+//                         {
+//                             filename: 'Puppy.png',
+//                             path: './public/images/puppy.jpg',
+//                             cid: 'uniquePuppyImage.jpg',
+//                         },
+//                     ],
+//                     subject: `Welcome at KASJMatches: ${req.body.firstName} ${req.body.lastName}`, // Subject line
+//                     text: `Welcome ${req.body.firstName} ${req.body.lastName} to KAJSMatches, and thank you for registering!`, // plain text body
+//                     html: `<h1>Thanks! ${req.body.firstName} for registering to KAJSMatches.</h1>
+//                         <h2>We hope that you enjoy your time with us</h2>
+//                         <p>Here a puppy for you to brighten up your day!</p>
+//                         <img src='cid:uniquePuppyImage.jpg'>`,
+//                 };
 
-                await transporter.sendMail(msg, function (err, info) {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    console.log('Email sent!');
-                });
-                req.flash('exists', 'E-mail has been send as a confirmation that you"ve registered');
-                res.redirect('/login');
-                return;
-            }
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(404).render('404', {
-            url: req.url,
-            title: 'Error 404',
-        });
-    }
-});
+//                 await transporter.sendMail(msg, function (err, info) {
+//                     if (err) {
+//                         console.log(err);
+//                         return;
+//                     }
+//                     console.log('Email sent!');
+//                 });
+//                 req.flash('exists', 'E-mail has been send as a confirmation that you"ve registered');
+//                 res.redirect('/login');
+//                 return;
+//             }
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(404).render('404', {
+//             url: req.url,
+//             title: 'Error 404',
+//         });
+//     }
+// });
 
 // Logging in a user
 app.post('/loginUser', (req, res) => {
@@ -238,25 +233,6 @@ app.post('/loginUser', (req, res) => {
     } catch (error) {
         console.log('Login failed ' + error);
     }
-});
-
-// Add a book feature
-const addBook = require('./controllers/addBook');
-app.use('/', addBook);
-
-app.get('/addabook', (req, res) => {
-    res.render('addBook');
-    console.log(addBook);
-});
-
-app.post('/addabook', (req, res) => {
-    const data = {
-        title: req.body.title,
-        author: req.body.author,
-        genre: req.body.genre,
-    };
-    saveData(data);
-    res.render('addBook');
 });
 
 // Matching feature
@@ -336,29 +312,6 @@ app.get('/mijn-matches', (req, res) => {
         },
     );
 });
-
-// Do we still need this?
-// // Update user
-// app.post('/updateUser', (req, res) => {
-//     User.findOneAndUpdate({ email: req.body.email }, { email: req.body.newEmail }, { new: true }, (error, data) => {
-//         if (error) {
-//             console.log(error);
-//         } else {
-//             res.redirect('/home');
-//         }
-//     });
-// });
-
-// // Delete user
-// app.post('/deleteUser', (req, res) => {
-//     User.findOneAndDelete({ email: req.body.email }, (error, data) => {
-//         if (error) {
-//             console.log(error);
-//         } else {
-//             res.redirect('/register');
-//         }
-//     });
-// });
 
 // Booting app
 app.listen(port, () => {

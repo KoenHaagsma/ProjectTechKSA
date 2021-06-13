@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
+const flasher = require('express-flash');
 // middleware for endpoints. needed to extern
 const router = express.Router();
 
@@ -21,6 +22,8 @@ router.use(
         resave: false,
     }),
 );
+
+router.use(flasher());
 
 // Routes
 router.get('/', (req, res) => {
