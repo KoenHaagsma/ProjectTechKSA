@@ -109,3 +109,14 @@ section.addBook {
       border: none;
       cursor: pointer;
       border-radius: 8px; }
+
+section.myProfile {
+  display: grid; }
+  section.myProfile h1 {
+    color: #16697aff; }
+  section.myProfile ul {
+    list-style: none; }
+  section.myProfile .card {
+    width: clamp(150px, 175px, 200px);
+    height: 230px;
+    box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.2); }

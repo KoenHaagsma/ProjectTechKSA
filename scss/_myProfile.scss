@@ -1,14 +1,21 @@
 section.myProfile{
+    display: grid;
+    
     h1  {
-
+        color: $ming;
     }
     label {
 
     }
         ul {
-
+            list-style: none;
         }
+            .card{
+                width: clamp(150px, 175px, 200px);
+                height: 230px;
+                box-shadow: 4px 4px 4px 0 rgba(0,0,0, 0.2);
+            }
             li {
-                
+
             }
 }
