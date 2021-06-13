@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer');
 // middleware for endpoints. needed to extern
 const router = express.Router();
 
-
 const getBooks = require('./modules/getBooks');
 const saveData = require('./modules/addBook');
 
@@ -158,14 +157,12 @@ router.post('/logout', (req, res) => {
     res.redirect('/');
 });
 
-
 // Get addabook page
 router.get('/addabook', (req, res) => {
     res.render('addBook');
-   
- });
+});
 
- // Add a book to database
+// Add a book to database
 router.post('/addabook', (req, res) => {
     const data = {
         title: req.body.title,
@@ -176,10 +173,10 @@ router.post('/addabook', (req, res) => {
     res.render('addBook');
 });
 
-// Reads out list of books 
+// Reads out list of books
 router.get('/myProfile', async (req, res) => {
     res.render('myProfile', {
-        books: await getBooks()
+        books: await getBooks(),
     });
 });
 
@@ -294,4 +291,4 @@ router.use((req, res, next) => {
     next();
 });
 
-module.exports = router
+module.exports = router;
