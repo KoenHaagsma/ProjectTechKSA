@@ -179,13 +179,13 @@ router.post('/logout', (req, res) => {
 router.get('/addabook', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
-            res.render('profile', {
+            res.render('addBook', {
                 user: user,
             });
         });
     } else {
         req.flash('exists', 'You need to log back in again');
-        res.render('addBook');
+        res.redirect('/login');
     }
 });
 
@@ -203,16 +203,14 @@ router.post('/addabook', (req, res) => {
 // Reads out list of books
 router.get('/myProfile', async (req, res) => {
     if (req.session.userId) {
-        User.findOne({ _id: req.session.userId }, function (err, user) {
+        User.findOne({ _id: req.session.userId }, async function (err, user) {
             res.render('myProfile', {
-                user: user,
+                books: await getBooks(),
             });
         });
     } else {
         req.flash('exists', 'You need to log back in again');
-        res.render('myProfile', {
-            books: await getBooks(),
-        });
+        res.redirect('/login');
     }
 });
 
