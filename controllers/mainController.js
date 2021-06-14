@@ -247,55 +247,7 @@ router.get('/myProfile', async (req, res) => {
     }
 });
 
-// -------------------------Gonna fix this later these days--------------------------------------------------
-
 // Matching feature
-// TODO: Need to change to books
-// router.get('/ontdekken', (req, res) => {
-//     User.find({}, (err, users) => {
-//         if (err) {
-//             res.status(404).render('404');
-//         } else {
-//             const filteredUsers = users.filter((user) => {
-//                 if (
-//                     !(
-//                         loggedInUser.matched.includes(user._id.toString()) ||
-//                         loggedInUser.ignored.includes(user._id.toString())
-//                     )
-//                 ) {
-//                     return user;
-//                 }
-//             });
-//             let matchedBoeken = [];
-//             for (const user of filteredUsers) {
-//                 let count = 0;
-//                 for (const interest of user.codeInterests) {
-//                     if (loggedInUser.codeInterests.includes(interest)) {
-//                         count++;
-//                     }
-//                     if (count >= 2) {
-//                         matchedBoeken.push(user);
-//                         break;
-//                     }
-//                 }
-//             }
-
-//             if (matchedUsers.length === 0) {
-//                 res.render('ontdekken_empty', {
-//                     title: 'Boeken ontdekken',
-//                     empty: 'Oeps! Het lijkt erop dat je niet gematched bent aan een boek.',
-//                 });
-//             } else {
-//                 res.render('ontdekken', {
-//                     title: 'Boeken ontdekken',
-//                     boeken: matchedBoeken,
-//                     aantalMatches: matchedUsers.length,
-//                 });
-//             }
-//         }
-//     });
-// });
-
 // Discover new books
 router.get('/ontdekken', (req, res) => {
     if (req.session.userId) {
@@ -303,29 +255,30 @@ router.get('/ontdekken', (req, res) => {
             if (err) {
                 console.log('Error appeared in the database' + err);
             } else {
-                connectedBooks = [];
-                for (let i = 0; i < user.genres.length; i++) {
-                    Book.findById({ _id: mongoose.Types.ObjectId(user.genres[i]) }, function (err, books) {
-                        connectedBooks.push(books._id);
-                    });
-                }
-                setTimeout(() => {
-                    console.log(connectedBooks + ' Books that the user has entered');
-                    Book.find({}, (err, books) => {
-                        console.log(books);
-
-                        // const filteredBooks = books.filter((book) => {
-                        //     if (books.includes(connectedBooks)) {
-                        //         return book;
-                        //     }
-                        // });
-
-                        console.log('This is the filtered books array ');
-                        console.log(filteredBooks);
-                    });
-
-                    res.render('ontdekken');
-                }, 2000);
+                Book.find(
+                    { _id: { $in: user.genres.map((value) => mongoose.Types.ObjectId(value)) } },
+                    (err, userBooks) => {
+                        if (!userBooks.length) {
+                            req.flash('exists', 'You did not fill in any books yet');
+                            res.redirect('/addabook');
+                        } else {
+                            const genres = userBooks.map((book) => book.genre);
+                            Book.find({ genre: { $in: genres } }, (err, books) => {
+                                const booksFiltered = books.filter(
+                                    (book) => !userBooks.map((b) => b._id.toString()).includes(book._id.toString()),
+                                );
+                                if (!booksFiltered.length) {
+                                    req.flash('exists', 'You did not match with any books, add more books');
+                                    res.redirect('/addabook');
+                                } else {
+                                    res.render('ontdekken', {
+                                        books: booksFiltered,
+                                    });
+                                }
+                            });
+                        }
+                    },
+                );
             }
         });
     } else {
@@ -334,34 +287,38 @@ router.get('/ontdekken', (req, res) => {
     }
 });
 
+router.post('/book/:id', (req, res) => {
+    User.findByIdAndUpdate(
+        req.session.userId,
+        {
+            $push: { genres: req.body.add },
+        },
+        (err) => {
+            if (err) {
+                console.log('updating to the database has failed');
+            } else {
+                req.flash('exists', 'Book has been added to your books');
+                res.redirect('/ontdekken');
+            }
+        },
+    );
+});
+
 // Watch my books route
 router.get('/mijn-matches', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
-            let matchedUsers = [];
-            loggedInUser.matched.forEach((user) => {
-                matchedUsers.push(user);
-            });
-            User.find(
-                {
-                    _id: { $in: matchedUsers },
-                },
-                (err, users) => {
-                    if (err) {
-                        console.log(err);
-                        res.redirect('/');
+            Book.find(
+                { _id: { $in: user.genres.map((value) => mongoose.Types.ObjectId(value)) } },
+                (err, userBooks) => {
+                    if (!userBooks.length) {
+                        res.render('my_matches_empty', {
+                            title: 'You did not accept any matches or dont have any books added',
+                        });
                     } else {
-                        if (matchedUsers.length === 0) {
-                            res.render('my_matches_empty', {
-                                title: 'Mijn Matches',
-                                empty: 'Oeps! Het lijkt erop dat je nog geen matches hebt geaccepteerd.',
-                            });
-                        } else {
-                            res.render('my_matches', {
-                                title: 'Mijn Matches',
-                                boeken: users,
-                            });
-                        }
+                        res.render('my_matches', {
+                            books: userBooks,
+                        });
                     }
                 },
             );
@@ -372,12 +329,11 @@ router.get('/mijn-matches', (req, res) => {
     }
 });
 
-// ---------------------------------------------------------------------------
-
 // Handling 404
 // TODO: Even kijken of ik use moet gebruiken of iets anders.
 router.use((req, res, next) => {
     res.status(404).render('404');
+    next();
 });
 
 module.exports = router;

@@ -1,3 +1,9 @@
 extends loggedInLayout
 
 block content
+    ul 
+        each book, i in books
+            li
+                h2 #{book.title}
+                p #{book.author}
+                p #{book.genre}

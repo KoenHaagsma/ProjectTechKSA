@@ -1,3 +1,13 @@
 extends loggedInLayout 
 
 block content
+    -if (messages.exists)
+        .message.exists
+            span=messages.exists
+    ul
+        each book, i in books
+            li
+                h2 #{book.title}
+                form(action=`/book/${book._id}` method='POST') 
+                    button(name="add" value=`${book._id}`) Voeg toe
+
