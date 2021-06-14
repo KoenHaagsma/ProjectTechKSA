@@ -190,14 +190,20 @@ router.get('/addabook', (req, res) => {
 });
 
 // Add a book to database
-router.post('/addabook', (req, res) => {
-    const data = {
-        title: req.body.title,
-        author: req.body.author,
-        genre: req.body.genre,
-    };
-    saveData(data);
-    res.render('addBook');
+router.post('/addabook', async (req, res) => {
+    try {
+        const data = {
+            title: req.body.title,
+            author: req.body.author,
+            genre: req.body.genre,
+        };
+        await saveData(data);
+        res.render('addBook');
+        
+    } catch (error) {
+        // err logic
+    }
+   
 });
 
 // Reads out list of books
