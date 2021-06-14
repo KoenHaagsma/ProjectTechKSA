@@ -14,7 +14,7 @@ function saveData(data) {
     });
 
     newBooks.save((err) => {
-        console.log(`${newBooks}`);
+        // console.log(`${newBooks}`);
         if (err) return handleError(err);
     });
 }

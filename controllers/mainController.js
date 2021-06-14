@@ -4,6 +4,7 @@ const session = require('express-session');
 const nodemailer = require('nodemailer');
 const flasher = require('express-flash');
 require('dotenv').config();
+const mongoose = require('mongoose');
 // middleware for endpoints. needed to extern
 const router = express.Router();
 
@@ -12,6 +13,8 @@ const saveData = require('./modules/addBook');
 
 // Loading in user models
 const User = require('../schema/user');
+const books = require('../schema/book');
+const Book = mongoose.model('book', books);
 
 // Express session
 router.use(
@@ -155,7 +158,7 @@ router.post('/loginUser', (req, res) => {
                             return;
                         }
                     })
-                    .catch(console.log('Wrong password'));
+                    .catch(console.log('error'));
             } else {
                 console.log('User not found');
                 req.flash('exists', 'We didn"t find you in our database');
@@ -172,7 +175,7 @@ router.post('/loginUser', (req, res) => {
 router.post('/logout', (req, res) => {
     req.session.destroy((err) => {});
     console.log('User is logged out');
-    res.redirect('/');
+    res.redirect('/login');
 });
 
 // Get addabook page
@@ -190,14 +193,44 @@ router.get('/addabook', (req, res) => {
 });
 
 // Add a book to database
-router.post('/addabook', (req, res) => {
+router.post('/addabook', async (req, res) => {
     const data = {
         title: req.body.title,
         author: req.body.author,
         genre: req.body.genre,
     };
-    saveData(data);
-    res.render('addBook');
+    await saveData(data);
+
+    try {
+        Book.findOne()
+            .sort({ $natural: -1 })
+            .limit(1)
+            .exec(function (err, book) {
+                if (err) {
+                    console.log('couldn"t find a book' + err);
+                    req.flash('exists', 'Something went wrong');
+                    res.redirect('/addabook');
+                    return;
+                } else {
+                    User.findOneAndUpdate(
+                        { _id: req.session.userId },
+                        { $push: { genres: book._id } },
+                        function (err, user) {
+                            if (user) {
+                                req.flash('exists', 'Book has been added to your account');
+                                res.redirect('/addabook');
+                                return;
+                            } else {
+                                console.log(err);
+                            }
+                        },
+                    );
+                }
+            });
+    } catch (err) {
+        console.log('Something went wrong with finding the book' + err);
+        res.redirect('/addabook');
+    }
 });
 
 // Reads out list of books
@@ -218,58 +251,82 @@ router.get('/myProfile', async (req, res) => {
 
 // Matching feature
 // TODO: Need to change to books
-router.get('/ontdekken', (req, res) => {
-    User.find({}, (err, users) => {
-        if (err) {
-            res.status(404).render('404');
-        } else {
-            const filteredUsers = users.filter((user) => {
-                if (
-                    !(
-                        loggedInUser.matched.includes(user._id.toString()) ||
-                        loggedInUser.ignored.includes(user._id.toString())
-                    )
-                ) {
-                    return user;
-                }
-            });
-            let matchedBoeken = [];
-            for (const user of filteredUsers) {
-                let count = 0;
-                for (const interest of user.codeInterests) {
-                    if (loggedInUser.codeInterests.includes(interest)) {
-                        count++;
-                    }
-                    if (count >= 2) {
-                        matchedBoeken.push(user);
-                        break;
-                    }
-                }
-            }
+// router.get('/ontdekken', (req, res) => {
+//     User.find({}, (err, users) => {
+//         if (err) {
+//             res.status(404).render('404');
+//         } else {
+//             const filteredUsers = users.filter((user) => {
+//                 if (
+//                     !(
+//                         loggedInUser.matched.includes(user._id.toString()) ||
+//                         loggedInUser.ignored.includes(user._id.toString())
+//                     )
+//                 ) {
+//                     return user;
+//                 }
+//             });
+//             let matchedBoeken = [];
+//             for (const user of filteredUsers) {
+//                 let count = 0;
+//                 for (const interest of user.codeInterests) {
+//                     if (loggedInUser.codeInterests.includes(interest)) {
+//                         count++;
+//                     }
+//                     if (count >= 2) {
+//                         matchedBoeken.push(user);
+//                         break;
+//                     }
+//                 }
+//             }
 
-            if (matchedUsers.length === 0) {
-                res.render('ontdekken_empty', {
-                    title: 'Boeken ontdekken',
-                    empty: 'Oeps! Het lijkt erop dat je niet gematched bent aan een boek.',
-                });
-            } else {
-                res.render('ontdekken', {
-                    title: 'Boeken ontdekken',
-                    boeken: matchedBoeken,
-                    aantalMatches: matchedUsers.length,
-                });
-            }
-        }
-    });
-});
+//             if (matchedUsers.length === 0) {
+//                 res.render('ontdekken_empty', {
+//                     title: 'Boeken ontdekken',
+//                     empty: 'Oeps! Het lijkt erop dat je niet gematched bent aan een boek.',
+//                 });
+//             } else {
+//                 res.render('ontdekken', {
+//                     title: 'Boeken ontdekken',
+//                     boeken: matchedBoeken,
+//                     aantalMatches: matchedUsers.length,
+//                 });
+//             }
+//         }
+//     });
+// });
 
-// Discover new books route
+// Discover new books
 router.get('/ontdekken', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
-            res.render('ontdekken', {
-                user: user,
-            });
+            if (err) {
+                console.log('Error appeared in the database' + err);
+            } else {
+                connectedBooks = [];
+                for (let i = 0; i < user.genres.length; i++) {
+                    Book.findById({ _id: mongoose.Types.ObjectId(user.genres[i]) }, function (err, books) {
+                        connectedBooks.push(books._id);
+                    });
+                }
+                setTimeout(() => {
+                    console.log(connectedBooks + ' Books that the user has entered');
+                    Book.find({}, (err, books) => {
+                        console.log(books);
+
+                        // const filteredBooks = books.filter((book) => {
+                        //     if (books.includes(connectedBooks)) {
+                        //         return book;
+                        //     }
+                        // });
+
+                        console.log('This is the filtered books array ');
+                        console.log(filteredBooks);
+                    });
+
+                    res.render('ontdekken');
+                }, 2000);
+            }
         });
     } else {
         req.flash('exists', 'You need to log back in again');
@@ -321,7 +378,6 @@ router.get('/mijn-matches', (req, res) => {
 // TODO: Even kijken of ik use moet gebruiken of iets anders.
 router.use((req, res, next) => {
     res.status(404).render('404');
-    next();
 });
 
 module.exports = router;
