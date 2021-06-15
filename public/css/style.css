@@ -126,6 +126,13 @@ section.myProfile {
     list-style: none;
     grid-gap: 2em; }
   section.myProfile .card {
+    display: grid;
     width: clamp(150px, 175px, 200px);
     height: 230px;
-    box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.2); }
+    box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.2);
+    background-color: #F2F2F2;
+    padding: 1em 0; }
+  section.myProfile li {
+    text-align: center; }
+  section.myProfile li:first-of-type {
+    font-weight: 600; }
