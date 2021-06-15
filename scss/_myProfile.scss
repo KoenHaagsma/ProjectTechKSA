@@ -8,12 +8,16 @@ section.myProfile{
 
     }
         ul {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             list-style: none;
+            grid-gap: 2em;
         }
             .card{
                 width: clamp(150px, 175px, 200px);
                 height: 230px;
                 box-shadow: 4px 4px 4px 0 rgba(0,0,0, 0.2);
+                
             }
             li {
 

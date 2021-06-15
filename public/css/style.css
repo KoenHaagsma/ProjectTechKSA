@@ -121,7 +121,10 @@ section.myProfile {
   section.myProfile h1 {
     color: #16697aff; }
   section.myProfile ul {
-    list-style: none; }
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    list-style: none;
+    grid-gap: 2em; }
   section.myProfile .card {
     width: clamp(150px, 175px, 200px);
     height: 230px;
