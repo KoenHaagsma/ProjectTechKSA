@@ -1,0 +1,28 @@
+extends loggedOutLayout 
+
+block content
+    -if (messages.exists)
+      .message.exists
+        span=messages.exists
+    section(class='loginSection')
+      form(action='/registerUser' method='POST' class="registerLogin")
+        h3 Register
+
+        label(for='email') Emailadres
+        input#email(type='email' name='email' placeholder='example@email.com' required='')
+
+        label(for='firstName') First name
+        input#email(type='text' name='firstName' placeholder='First name' required='')
+
+        label(for='lastName') Last name
+        input#email(type='text' name='lastName' placeholder='Last name' required='')
+
+        label(for="password") Password (Minimal 8 characters)
+        input#password(type='password' name='password' minlength="8" required='')
+
+        label(for='confirmPassword') Confirm password
+        input#confirmPassword(type='password' name='confirmPassword' minlength='8' required='')
+        button(type="submit") Register
+  
+        button(type="submit")
+          a(href="/login") Already have an account? Login!

@@ -1,0 +1,35 @@
+.homeSection {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    @media (max-width: $screen_size_phone) {
+        margin-top: 5rem;
+    }
+    .dashCard {
+        border: 2px solid $ming;
+        padding: 0.8rem;
+        border-radius: 4px;
+        text-align: center;
+        height: 200px;
+        margin: 1rem;
+        h4 {
+            p {
+                font-weight: normal;
+            }
+        }
+        button {
+            font-size: 16px;
+            margin-top: 1rem;
+            text-decoration: none;
+            background-color: #16697aff;
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            box-shadow: none;
+            border: 1px solid #16697aff;
+            cursor: pointer;
+            a {
+                text-decoration: none;
+            }
+        }
+    }
+}

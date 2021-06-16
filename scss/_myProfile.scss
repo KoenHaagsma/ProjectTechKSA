@@ -1,0 +1,109 @@
+.myProfile {
+    margin: 0px 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    @media (max-width: $screen_size_phone) {
+        margin-top: 2rem;
+    }
+    h1 {
+        color: $ming;
+    }
+    .userDetails {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        div {
+            h4 {
+                margin-bottom: 4px;
+            }
+            .sectionBlue {
+                width: 320px;
+                max-width: 380px;
+                margin-bottom: 0px;
+                margin-top: 4px;
+                border: 2px solid $middle-blue;
+                padding: 12px 8px;
+                border-radius: 4px;
+                background-color: $middle-blue;
+            }
+            p {
+                margin-bottom: 4px;
+            }
+        }
+    }
+    .userBooks {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1rem;
+    }
+    ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        list-style: none;
+        padding-left: 0;
+        align-items: center;
+        justify-content: center;
+        @media (min-width: $screen-size-phone) {
+            max-width: 60vw;
+        }
+    }
+    .card {
+        margin: 0 8px 8px 8px;
+        border-radius: 4px;
+        display: grid;
+        width: clamp(100px, 108px, 115px);
+        height: 230px;
+        border: 2px solid $middle-blue;
+        padding: 1rem;
+    }
+    li {
+        text-align: left;
+        font-weight: 600;
+        p {
+            font-weight: normal;
+            margin-top: 4px;
+        }
+    }
+
+    .btn-addBook {
+        color: rgb(240, 240, 240);
+        background-color: $ming;
+        font-weight: 600;
+        padding: 0.75em;
+        border: none;
+        cursor: pointer;
+        border-radius: 17px;
+        width: 10em;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-addBook:hover {
+        text-decoration: underline;
+        background-color: #0b353d;
+    }
+    // .deleteForm {
+    //     display: flex;
+    //     justify-content: center;
+    //     align-items: center;
+    // }
+
+    // .btn-delete {
+    //     color:rgb(240, 240, 240);
+    //     background-color: #F84141;
+    //     font-weight: 600;
+    //     padding: 0.75em;
+    //     border: none;
+    //     cursor: pointer;
+    //     border-radius: 20px;
+    //     width: 5em;
+    //     text-decoration: none;
+    //     text-align: center;
+    // }
+}

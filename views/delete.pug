@@ -1,0 +1,7 @@
+h1 Delete account
+
+form(action="/deleteUser" method="POST")
+  label Type your email to delete your account.
+    input#e-mail(type="email" name="email")
+  button(type="submit") Delete account
+include ../partials/footer.pug

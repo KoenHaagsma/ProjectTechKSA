@@ -1,0 +1,35 @@
+extends loggedInLayout 
+
+
+//- Need to have a delete account button/section
+//- Also need to have a change email option/username/normal name
+
+block content
+    section.myProfile  
+        h1 Profile 
+        
+        div(class='userDetails')
+            div 
+                h4 Name: 
+                p(class='sectionBlue') #{user.firstName} #{user.lastName}
+            div
+                h4 E-mail:
+                p(class='sectionBlue') #{user.email}
+                
+        div(class='userBooks') 
+            h1 My books:
+            ul 
+                each data in books ? books : [] 
+                    .card 
+                        li Title: 
+                            p #{data.title}
+                        li Author: 
+                            p #{data.author}
+                        li Genre:  
+                            p #{data.genre}
+                        //- form(action="/deleteBook" method="POST" class="deleteForm")
+                            button(type="submit" value='#{data._id}' class="btn-delete") X
+        a(href='/addabook' class='btn-addBook') Add a book
+
+
+

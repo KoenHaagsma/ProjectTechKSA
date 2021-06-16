@@ -1,0 +1,28 @@
+.mysection {
+    display: flex;
+    flex-direction: column;
+}
+
+h3 {
+    text-align: center;
+}
+
+a {
+    color: black;
+    text-align: center;
+}
+
+.button {
+    text-decoration: none;
+    background-color: #16697aff;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 16px;
+    margin-top: 1rem;
+}
+
+.image {
+    margin-left: 1vw;
+    margin-top: 4vh;
+    max-height: 30vh;
+}

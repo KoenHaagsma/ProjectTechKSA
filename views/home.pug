@@ -1,0 +1,24 @@
+extends loggedInLayout
+
+block content
+
+    -if (messages.exists)
+        .message.exists
+            span=messages.exists
+    section(class='homeSection loginSection')
+        div(class='dashCard')
+            h3 Your profile:
+            h4 Email
+                p #{user.email}
+            h4 Name:
+                p #{user.firstName} #{user.lastName}
+        div(class='dashCard') 
+            h3 Add books: 
+            p Do you want to add more books to your profile: 
+            button
+                a(href='/addabook') Add books
+        div(class='dashCard') 
+            h3 Discover books:
+            p Find the perfect book today! 
+            button
+                a(href='/discover') Discover books

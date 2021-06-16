@@ -1,0 +1,17 @@
+extends loggedInLayout
+
+block content
+    section(class='loginSection')
+        -if (messages.exists)
+            .message.exists
+                span=messages.exists
+        
+        form(action="" method="POST" class='registerLogin')
+            h3 Add a book to my list: 
+            label Title: 
+            input.add(type="text" name="title", required)
+            label Author:
+            input.add(type="text" name="author", required)
+            label Genre: 
+            input(type="text" name="genre", required)
+            button(type="submit") Add book
