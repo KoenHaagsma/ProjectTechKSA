@@ -26,7 +26,7 @@
     },
     "scripts": {
         "linter": "./node_modules/.bin/eslint ./**/*.js --fix",
-        "start": "node ./src/index.js",
+        "start": "node index.js",
         "dev": "concurrently \"nodemon ./index.js\" \"node-sass ./scss/app.scss ./public/css/style.css -w\" \"npm run linter\"",
         "dev1": "nodemon ./index.js"
     },
