@@ -136,3 +136,14 @@ section.myProfile {
     text-align: center; }
   section.myProfile li:first-of-type {
     font-weight: 600; }
+  section.myProfile .btn-addBook {
+    color: #f0f0f0;
+    background-color: #16697aff;
+    font-weight: 600;
+    padding: 0.75em;
+    border: none;
+    cursor: pointer;
+    border-radius: 17px;
+    width: 10em;
+    text-decoration: none;
+    text-align: center; }
