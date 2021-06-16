@@ -2,7 +2,7 @@
 
 ## 🧾 Table of contents
 
--   [About the project](##📖-About-the-project)
+-   [About the project](##About-the-project)
       * [Built with](###Built-with)
 -   [Getting started](##Getting-started)
       * [Installation](##Installation)
