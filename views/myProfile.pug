@@ -14,12 +14,14 @@ block content
 
         label List of books
             ul 
-                each data in books
+                each data in books ? books : [] 
                     .card 
                         li= data.title
                         li= data.author
                         li= data.genre
-
+                        
+                        form(action="/deleteBook" method="POST")
+                            button(type="submit" value='#{data._id}') Delete
         a(href='/addabook' class='btn-addBook') Add a book
              
 
