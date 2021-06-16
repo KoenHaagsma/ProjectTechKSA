@@ -1,32 +1,78 @@
-section.myProfile{
-    display: grid;
-    
-    h1  {
+.myProfile {
+    margin: 0px 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    @media (max-width: $screen_size_phone) {
+        margin-top: 2rem;
+    }
+    h1 {
         color: $ming;
     }
-        ul {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            list-style: none;
-            grid-gap: 2em;
+    .userDetails {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        div {
+            h4 {
+                margin-bottom: 4px;
+            }
+            .sectionBlue {
+                width: 320px;
+                max-width: 380px;
+                margin-bottom: 0px;
+                margin-top: 4px;
+                border: 2px solid $middle-blue;
+                padding: 12px 8px;
+                border-radius: 4px;
+                background-color: $middle-blue;
+            }
+            p {
+                margin-bottom: 4px;
+            }
         }
-            .card{
-                display: grid;
-                width: clamp(150px, 175px, 200px);
-                height: 230px;
-                box-shadow: 4px 4px 4px 0 rgba(0,0,0, 0.2);
-                background-color: #F2F2F2;
-                padding: 1em 0;
-            }
-            li {
-                text-align: center;
-            }
-            li:first-of-type {
-                font-weight: 600;
+    }
+    .userBooks {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1rem;
+    }
+    ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        list-style: none;
+        padding-left: 0;
+        align-items: center;
+        justify-content: center;
+        @media (min-width: $screen-size-phone) {
+            max-width: 60vw;
+        }
+    }
+    .card {
+        margin: 0 8px 8px 8px;
+        border-radius: 4px;
+        display: grid;
+        width: clamp(100px, 108px, 115px);
+        height: 230px;
+        border: 2px solid $middle-blue;
+        padding: 1rem;
+    }
+    li {
+        text-align: left;
+        font-weight: 600;
+        p {
+            font-weight: normal;
+            margin-top: 4px;
+        }
+    }
 
-            }
     .btn-addBook {
-        color:rgb(240, 240, 240); 
+        color: rgb(240, 240, 240);
         background-color: $ming;
         font-weight: 600;
         padding: 0.75em;
@@ -37,14 +83,19 @@ section.myProfile{
         text-decoration: none;
         text-align: center;
     }
-    .deleteForm {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+
+    .btn-addBook:hover {
+        text-decoration: underline;
+        background-color: #0b353d;
     }
-    
+    // .deleteForm {
+    //     display: flex;
+    //     justify-content: center;
+    //     align-items: center;
+    // }
+
     // .btn-delete {
-    //     color:rgb(240, 240, 240); 
+    //     color:rgb(240, 240, 240);
     //     background-color: #F84141;
     //     font-weight: 600;
     //     padding: 0.75em;

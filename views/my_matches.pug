@@ -1,9 +1,14 @@
 extends loggedInLayout
 
 block content
-    ul 
-        each book, i in books
-            li
-                h2 #{book.title}
-                p #{book.author}
-                p #{book.genre}
+    section(class='loginSection savedBooks')
+        h1 Saved Books: #{books.length}
+        ul 
+            each book, i in books
+                li
+                    h3 Title: 
+                        p #{book.title}
+                    h3 Author:
+                        p #{book.author}
+                    h3 Genre:
+                        p #{book.genre}

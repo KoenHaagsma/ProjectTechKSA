@@ -205,7 +205,6 @@ router.post('/addabook', async (req, res) => {
             .limit(1)
             .exec(function (err, book) {
                 if (err) {
-                    console.log('couldn"t find a book' + err);
                     req.flash('exists', 'Something went wrong');
                     res.redirect('/addabook');
                     return;
@@ -236,6 +235,7 @@ router.get('/myProfile', async (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, async function (err, user) {
             res.render('myProfile', {
+                user: user,
                 books: await getBooks(),
             });
         });
@@ -247,7 +247,7 @@ router.get('/myProfile', async (req, res) => {
 
 // Matching feature
 // Discover new books
-router.get('/ontdekken', (req, res) => {
+router.get('/discover', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
             if (err) {
@@ -295,15 +295,15 @@ router.post('/book/:id', (req, res) => {
             if (err) {
                 console.log('updating to the database has failed');
             } else {
-                req.flash('exists', 'Book has been added to your books');
-                res.redirect('/ontdekken');
+                req.flash('exists', 'Book has been added to your "Saved books"');
+                res.redirect('/discover');
             }
         },
     );
 });
 
 // Watch my books route
-router.get('/mijn-matches', (req, res) => {
+router.get('/my-matches', (req, res) => {
     if (req.session.userId) {
         User.findOne({ _id: req.session.userId }, function (err, user) {
             Book.find(

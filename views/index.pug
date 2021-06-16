@@ -1,11 +1,13 @@
 
 //- Inlog + registration.
-extends layout
+extends loggedOutLayout
+
 block content
- h3 Welkom! Login of registreer gratis
-    section(class='mysection')
-        a(href='/login' class='button') Inloggen
-        a(href='/register' class='button') Registreren
+    section(class='mysection loginSection')
+        h3 Welcome! Login or register for free
+        p We are going to help you to find the best book ever
+        a(href='/login' class='button') Login
+        a(href='/register' class='button') Register
             
             
         img(src="/images/image-2.png" alt="login" class="image")

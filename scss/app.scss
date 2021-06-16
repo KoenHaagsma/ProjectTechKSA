@@ -19,12 +19,16 @@ html {
         display: flex;
         flex-direction: column;
         align-items: center;
+        main {
+            width: 100%;
+        }
     }
 }
 
 @import 'colours.scss';
 @import 'footer.scss';
 @import 'header.scss';
+@import 'home.scss';
 @import 'index.scss';
 @import 'layout.scss';
 @import 'typography.scss';
@@ -32,3 +36,5 @@ html {
 @import 'addBook.scss';
 @import 'myProfile.scss';
 @import 'login.scss';
+@import 'flashMessages.scss';
+@import 'myMatches.scss';

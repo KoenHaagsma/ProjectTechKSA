@@ -1,25 +1,28 @@
-extends layout 
+extends loggedOutLayout 
 
 block content
     -if (messages.exists)
       .message.exists
         span=messages.exists
-    form(action='/registerUser' method='POST')
-      label(for='email') Emailadres
-      input#email(type='email' name='email' placeholder='example@email.com' required='')
+    section(class='loginSection')
+      form(action='/registerUser' method='POST' class="registerLogin")
+        h3 Register
 
-      label(for='firstName') First name
-      input#email(type='text' name='firstName' placeholder='First name' required='')
+        label(for='email') Emailadres
+        input#email(type='email' name='email' placeholder='example@email.com' required='')
 
-      label(for='lastName') Last name
-      input#email(type='text' name='lastName' placeholder='Last name' required='')
+        label(for='firstName') First name
+        input#email(type='text' name='firstName' placeholder='First name' required='')
 
-      label(for="password") Password (Minimal 8 characters)
-      input#password(type='password' name='password' minlength="8" required='')
+        label(for='lastName') Last name
+        input#email(type='text' name='lastName' placeholder='Last name' required='')
 
-      label(for='confirmPassword') Confirm password
-      input#confirmPassword(type='password' name='confirmPassword' minlength='8' required='')
-      button(type="submit") Register
+        label(for="password") Password (Minimal 8 characters)
+        input#password(type='password' name='password' minlength="8" required='')
+
+        label(for='confirmPassword') Confirm password
+        input#confirmPassword(type='password' name='confirmPassword' minlength='8' required='')
+        button(type="submit") Register
   
-      button(type="submit")
-        a(href="/login") Already have an account? Login!
+        button(type="submit")
+          a(href="/login") Already have an account? Login!

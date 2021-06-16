@@ -1,13 +1,14 @@
-extends layout
+extends loggedOutLayout
 
 //- Inlog + registration.
 block content
-    section
+    section(class='loginSection')
         -if (messages.exists)
             .message.exists
                 span=messages.exists
-        form(action="/loginUser" method="POST")
-            label(for='email') emailadres
+        form(action="/loginUser" method="POST" class="registerLogin")
+            h3 Login
+            label(for='email') E-mail
             input#email(type='email' name='email' placeholder='example@email.com' required='')
 
             label(for='password') Password (Minimum of 8 characters)
