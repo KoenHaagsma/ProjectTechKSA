@@ -31,7 +31,16 @@ router.use(flasher());
 
 // Routes
 router.get('/', (req, res) => {
-    res.render('index');
+    if (req.session.userId) {
+        User.findOne({ _id: req.session.userId }, function (err, user) {
+            res.render('home', {
+                user: user,
+            });
+        });
+    } else {
+        req.flash('exists', 'You need to log in');
+        res.redirect('/login');
+    }
 });
 
 // Login route
@@ -152,13 +161,12 @@ router.post('/loginUser', (req, res) => {
                             res.redirect('/home');
                             return;
                         } else {
-                            console.log('Wrong password entered');
                             req.flash('exists', 'You"ve entered a wrong password');
                             res.redirect('/login');
                             return;
                         }
                     })
-                    .catch(console.log('error'));
+                    .catch(console.log(err));
             } else {
                 console.log('User not found');
                 req.flash('exists', 'We didn"t find you in our database');
@@ -174,7 +182,6 @@ router.post('/loginUser', (req, res) => {
 // Logging out the user
 router.post('/logout', (req, res) => {
     req.session.destroy((err) => {});
-    console.log('User is logged out');
     res.redirect('/login');
 });
 
