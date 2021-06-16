@@ -20,17 +20,11 @@ block content
                         li= data.author
                         li= data.genre
                         
-                        form(action="/deleteBook" method="POST" class="deleteForm")
+                        //- form(action="/deleteBook" method="POST" class="deleteForm")
                             button(type="submit" value='#{data._id}' class="btn-delete") X
         a(href='/addabook' class='btn-addBook') Add a book
              
 
-        form(action="updateUser" method="POST")
-            label Fill in your current email
-            input(name="email")
-            label Fill in your new email
-            input(name="newEmail")
-            button(type="submit") Change email
             
             
 
