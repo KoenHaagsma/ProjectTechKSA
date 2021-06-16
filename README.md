@@ -66,7 +66,6 @@ npm run dev
 
 ### 🧱 Dev dependecies
 
-- [chalk](https://www.npmjs.com/package/chalk)
 - [concurrently](https://www.npmjs.com/package/concurrently)
 - [eslint](https://www.npmjs.com/package/eslint)
 - [node-sass](https://www.npmjs.com/package/node-sass)
