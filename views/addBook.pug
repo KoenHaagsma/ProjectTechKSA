@@ -4,22 +4,19 @@ block content
     -if (messages.exists)
         .message.exists
             span=messages.exists
-    section 
-        h1 Add a book to my list 
+    section.addBook 
+        h1 Add a book to my list: 
         form(action="" method="POST")
             #addBook.input
-                label Title 
-                input(type="text" name="title")
+                label Title: 
+                input.add(type="text" name="title", required)
 
             #addBook.input
-                label Author 
-                input(type="text" name="author")
+                label Author:
+                input.add(type="text" name="author", required)
 
             #addBook.input
-                label Genre 
-                input(type="text" name="genre")
+                label Genre: 
+                input(type="text" name="genre", required)
 
-            #addBook.input
-                label Image 
-                input(type="file" name="image")
-            button(type="submit") Submit
+            button(type="submit") Add book

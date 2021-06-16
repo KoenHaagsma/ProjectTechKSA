@@ -254,6 +254,24 @@ router.get('/myProfile', async (req, res) => {
     }
 });
 
+// Delete a book
+// WIP
+// router.post('/deleteBook', async (req, res) => {
+//     try {
+//         Book.deleteOne({
+//             _id : req.body.id,
+//         })
+//         await Book.deleteOne()
+//         res.render('myProfile', {
+//             books: await getBooks()
+//         })
+//     } catch (error) {
+//         if (err) return console.log(err)
+//     }
+    
+// })
+
+
 // Matching feature
 // Discover new books
 router.get('/ontdekken', (req, res) => {

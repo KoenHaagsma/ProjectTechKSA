@@ -5,19 +5,25 @@ extends loggedInLayout
 //- Also need to have a change email option/username/normal name
 
 block content
-    section  
+    section.myProfile  
         h1 My profile 
         
-        label Name
+        //label Name
         
-        label Interests 
+        //label Interests 
 
         label List of books
             ul 
-                each data in books
-                    li= data.title
-                    li= data.author
-                    li= data.genre
+                each data in books ? books : [] 
+                    .card 
+                        li= data.title
+                        li= data.author
+                        li= data.genre
+                        
+                        form(action="/deleteBook" method="POST" class="deleteForm")
+                            button(type="submit" value='#{data._id}' class="btn-delete") X
+        a(href='/addabook' class='btn-addBook') Add a book
+             
 
         form(action="updateUser" method="POST")
             label Fill in your current email
