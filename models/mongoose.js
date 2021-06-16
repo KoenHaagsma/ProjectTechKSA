@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const chalk = require('chalk');
 const connectDBMongoose = async () => {
     try {
         await mongoose.connect(
@@ -12,9 +11,9 @@ const connectDBMongoose = async () => {
                 tlsInsecure: true,
             },
         );
-        console.log(chalk.greenBright('Connection with the database established'));
+        console.log('Connection with the database established');
     } catch (error) {
-        console.log(chalk.redBright(`an error occurred: ${error}`));
+        console.log(`an error occurred: ${error}`);
         throw error;
     }
 };
