@@ -1,5 +1,4 @@
 const express = require('express');
-const chalk = require('chalk');
 require('dotenv').config();
 const path = require('path');
 
@@ -35,5 +34,5 @@ app.use('/', mainController);
 
 // Booting app
 app.listen(port, () => {
-    console.log(chalk.blueBright(`Example app listening at http://localhost:${port}`));
+    console.log(`Example app listening at http://localhost:${port}`);
 });
