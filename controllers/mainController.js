@@ -39,7 +39,7 @@ router.get('/', (req, res) => {
         });
     } else {
         req.flash('exists', 'You need to log in');
-        res.redirect('/login');
+        res.redirect('/');
     }
 });
 
@@ -268,9 +268,8 @@ router.get('/myProfile', async (req, res) => {
 //     } catch (error) {
 //         if (err) return console.log(err)
 //     }
-    
-// })
 
+// })
 
 // Matching feature
 // Discover new books
