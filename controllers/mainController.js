@@ -63,7 +63,6 @@ router.post('/registerUser', async (req, res) => {
     try {
         User.findOne({ email: req.body.email }, async function (err, user) {
             if (user) {
-                console.log('User already exists in our database');
                 req.flash('exists', 'Email already exists in our database');
                 res.redirect('/login');
                 return;
@@ -159,7 +158,6 @@ router.post('/loginUser', (req, res) => {
                     })
                     .catch(console.log(err));
             } else {
-                console.log('User not found');
                 req.flash('exists', 'We didn"t find you in our database');
                 res.redirect('/login');
                 return;
@@ -293,7 +291,7 @@ router.post('/book/:id', (req, res) => {
         },
         (err) => {
             if (err) {
-                console.log('updating to the database has failed');
+                console.log(err);
             } else {
                 req.flash('exists', 'Book has been added to your "Saved books"');
                 res.redirect('/discover');
