@@ -20,8 +20,8 @@ block content
                         li= data.author
                         li= data.genre
                         
-                        form(action="/deleteBook" method="POST")
-                            button(type="submit" value='#{data._id}') Delete
+                        form(action="/deleteBook" method="POST" class="deleteForm")
+                            button(type="submit" value='#{data._id}' class="btn-delete") X
         a(href='/addabook' class='btn-addBook') Add a book
              
 

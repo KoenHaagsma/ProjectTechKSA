@@ -147,3 +147,18 @@ section.myProfile {
     width: 10em;
     text-decoration: none;
     text-align: center; }
+  section.myProfile .deleteForm {
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+  section.myProfile .btn-delete {
+    color: #f0f0f0;
+    background-color: #F84141;
+    font-weight: 600;
+    padding: 0.75em;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    width: 5em;
+    text-decoration: none;
+    text-align: center; }
