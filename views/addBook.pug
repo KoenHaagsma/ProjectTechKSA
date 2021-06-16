@@ -1,6 +1,9 @@
 extends loggedInLayout
 
 block content
+    -if (messages.exists)
+        .message.exists
+            span=messages.exists
     section.addBook 
         h1 Add a book to my list: 
         form(action="" method="POST")
